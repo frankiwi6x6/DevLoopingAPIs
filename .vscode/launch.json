@@ -9,6 +9,16 @@
             "projectName": "userAPI",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ChallengesAPIApplication<challengesAPI>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.DEVLooping.challengesAPI.ChallengesAPIApplication",
+            "projectName": "challengesAPI",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
