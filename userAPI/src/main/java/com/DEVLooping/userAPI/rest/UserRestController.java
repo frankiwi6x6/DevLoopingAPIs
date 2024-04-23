@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api")
 public class UserRestController {
 
     private UserService userService;
@@ -28,14 +28,14 @@ public class UserRestController {
     }
     // exponer "/users" y retornar todos los usuarios
 
-    @GetMapping("/")
+    @GetMapping("/users")
     public List<User> findAll() {
         List<User> theUsers = userService.findAll();
 
         return theUsers;
     }
 
-    @PostMapping("/login")
+    @PostMapping("/users/login")
     public ResponseEntity<?> loginUser(@RequestBody Map<String, String> request) {
         String email = request.get("email");
         String password = request.get("password");
@@ -69,7 +69,7 @@ public class UserRestController {
                         0));
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/users/{userId}")
     public User findById(@PathVariable int userId) {
         User theUser = userService.findById(userId);
         if (theUser == null) {
@@ -78,7 +78,7 @@ public class UserRestController {
         return theUser;
     }
 
-    @PostMapping("/register")
+    @PostMapping("/users/register")
     public ResponseEntity<?> addUser(@RequestBody User theUser) {
         if (theUser.getEmail() == null || theUser.getUsername() == null || theUser.getPassword() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -134,7 +134,7 @@ public class UserRestController {
         return ResponseEntity.ok(dbUser);
     }
 
-    @PutMapping("/{userId}")
+    @PutMapping("/users/{userId}")
     public User updateUser(@PathVariable int userId, @RequestBody User updatedUser) {
         User existingUser = userService.findById(userId);
         if (existingUser == null) {
@@ -151,7 +151,7 @@ public class UserRestController {
         return savedUser;
     }
 
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/users/{userId}")
     public User softDeleteUser(@PathVariable int userId) {
         User existingUser = userService.findById(userId);
         if (existingUser == null) {
@@ -165,20 +165,6 @@ public class UserRestController {
         // Guardar el usuario desactivado en la base de datos
         User updatedUser = userService.save(existingUser);
         return updatedUser;
-    }
-
-    @GetMapping("/desencriptar/{userId}")
-    public User decryptPassword(@PathVariable int userId) {
-        User existingUser = userService.findById(userId);
-        if (existingUser == null) {
-            throw new UserNotFoundException("User not found with id: " + userId);
-        }
-
-        // Desencriptar la contraseña del usuario
-        String decryptedPassword = encryptService.decrypt(existingUser.getPassword());
-        existingUser.setPassword(decryptedPassword);
-
-        return existingUser;
     }
 
     @RestControllerAdvice

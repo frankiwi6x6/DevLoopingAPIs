@@ -25,9 +25,12 @@ public class User {
 
     @Column(name = "status")
     private String status;
-    
+
     @Column(name = "deactivated_at")
     private Date deactivated_at;
+
+    @Column(name = "profile_pic_url")
+    private String profile_pic_url;
 
     // Getters y setters
 
@@ -99,20 +102,29 @@ public class User {
         this.status = status;
     }
 
-    // constuctores 
+    // constuctores
     public User() {
     }
 
-    public User(int id, String username, String email, String password, Date created_at, UserType userType) {
+    public User(int id, String username, String email, String password, Date created_at, UserType userType,
+            String status, Date deactivated_at, String profile_pic_url) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.created_at = created_at;
         this.userType = userType;
+        this.status = status;
+        this.deactivated_at = deactivated_at;
+        this.profile_pic_url = profile_pic_url;
     }
 
-  
+    public String getProfile_pic_url() {
+        return profile_pic_url;
+    }
 
+    public void setProfile_pic_url(String profile_pic_url) {
+        this.profile_pic_url = profile_pic_url;
+    }
 
 }
