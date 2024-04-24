@@ -25,9 +25,16 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
 
+
+
     @Override
     public Challenge findById(int theId) {
         return challengeDAO.findById(theId);
+    }
+
+    @Override
+    public List<Challenge> findByDifficulty(int theDifficulty) {
+        return challengeDAO.findByDifficulty(theDifficulty);
     }
 
     @Transactional

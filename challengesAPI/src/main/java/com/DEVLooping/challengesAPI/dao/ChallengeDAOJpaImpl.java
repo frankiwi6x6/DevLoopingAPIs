@@ -32,6 +32,13 @@ public class ChallengeDAOJpaImpl implements ChallengeDAO {
     }
 
     @Override
+    public List<Challenge> findByDifficulty(int theDifficulty) {
+        TypedQuery<Challenge> theQuery = entityManager.createQuery(
+                "SELECT c FROM Challenge c JOIN c.difficulty d WHERE d.id = :difficulty", Challenge.class);
+        theQuery.setParameter("difficulty", theDifficulty);
+        return theQuery.getResultList();
+    }
+    @Override
     public Challenge save(Challenge theChallenge) {
 
         Challenge dbChallenge = entityManager.merge(theChallenge);

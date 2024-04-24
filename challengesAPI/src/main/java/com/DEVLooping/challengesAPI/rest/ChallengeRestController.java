@@ -1,10 +1,12 @@
 package com.DEVLooping.challengesAPI.rest;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.DEVLooping.challengesAPI.entity.Challenge;
+import com.DEVLooping.challengesAPI.entity.ErrorResponse;
 import com.DEVLooping.challengesAPI.service.ChallengeService;
 
 import java.util.List;
@@ -13,6 +15,8 @@ import java.util.List;
 @RequestMapping("/api")
 public class ChallengeRestController {
 
+    ErrorResponse errorResponse;
+
     private ChallengeService challengeService;
 
     public ChallengeRestController(ChallengeService theChallengeService) {
@@ -20,18 +24,44 @@ public class ChallengeRestController {
     }
 
     @GetMapping("/challenges")
-    public ResponseEntity<List<Challenge>> findAll() {
+    public ResponseEntity<?> findAll() {
         List<Challenge> theChallenges = challengeService.findAll();
+        if (theChallenges.size() < 1) {
+            return ResponseEntity.status(
+                    HttpStatus.NOT_FOUND).body(
+                            new ErrorResponse(HttpStatus.NOT_FOUND.value(),
+                                    HttpStatus.NOT_FOUND.getReasonPhrase(),
+                                    "No challenges found"));
+        }
         return ResponseEntity.ok(theChallenges);
     }
 
     @GetMapping("/challenges/{challengeId}")
-    public ResponseEntity<Challenge> getChallenge(@PathVariable int challengeId) {
+    public ResponseEntity<?> getChallenge(@PathVariable int challengeId) {
         Challenge theChallenge = challengeService.findById(challengeId);
         if (theChallenge == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(
+                    HttpStatus.NOT_FOUND).body(
+                            new ErrorResponse(HttpStatus.NOT_FOUND.value(),
+                                    HttpStatus.NOT_FOUND.getReasonPhrase(),
+                                    "No challenges found with id " + challengeId));
+
         }
         return ResponseEntity.ok(theChallenge);
+    }
+
+    @GetMapping("/challenges/difficulty/{difficulty}")
+    public ResponseEntity<?> getChallengesByDifficulty(@PathVariable int difficulty) {
+        List<Challenge> theChallenges = challengeService.findByDifficulty(difficulty);
+        if (theChallenges.size() < 1) {
+            return ResponseEntity.status(
+                    HttpStatus.NOT_FOUND).body(
+                            new ErrorResponse(HttpStatus.NOT_FOUND.value(),
+                                    HttpStatus.NOT_FOUND.getReasonPhrase(),
+                                    "No challenges found with difficulty level " + difficulty));
+
+        }
+        return ResponseEntity.ok(theChallenges);
     }
 
     @PostMapping("/challenges")
@@ -41,17 +71,30 @@ public class ChallengeRestController {
         return ResponseEntity.status(HttpStatus.CREATED).body(theChallenge);
     }
 
-    @PutMapping("/challenges")
-    public ResponseEntity<Challenge> updateChallenge(@RequestBody Challenge theChallenge) {
+    @PutMapping("/challenges/{challengeId}")
+    public ResponseEntity<?> updateChallenge(@RequestBody Challenge theChallenge, @PathVariable int challengeId) {
+        Challenge tempChallenge = challengeService.findById(challengeId);
+        if (tempChallenge == null) {
+            return ResponseEntity.status(
+                    HttpStatus.NOT_FOUND).body(
+                            new ErrorResponse(HttpStatus.NOT_FOUND.value(),
+                                    HttpStatus.NOT_FOUND.getReasonPhrase(),
+                                    "No challenges found with id " + challengeId));
+        }
+        theChallenge.setId(challengeId);
         challengeService.save(theChallenge);
         return ResponseEntity.ok(theChallenge);
     }
 
     @DeleteMapping("/challenges/{challengeId}")
-    public ResponseEntity<String> deleteChallenge(@PathVariable int challengeId) {
+    public ResponseEntity<?> deleteChallenge(@PathVariable int challengeId) {
         Challenge tempChallenge = challengeService.findById(challengeId);
         if (tempChallenge == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(
+                    HttpStatus.NOT_FOUND).body(
+                            new ErrorResponse(HttpStatus.NOT_FOUND.value(),
+                                    HttpStatus.NOT_FOUND.getReasonPhrase(),
+                                    "No challenges found with id " + challengeId));
         }
         challengeService.deleteById(challengeId);
         return ResponseEntity.ok("Deleted challenge id - " + challengeId);

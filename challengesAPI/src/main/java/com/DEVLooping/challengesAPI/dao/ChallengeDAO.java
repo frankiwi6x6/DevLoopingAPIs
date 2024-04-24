@@ -10,6 +10,8 @@ public interface ChallengeDAO {
 
     Challenge findById(int theId);
 
+    List<Challenge> findByDifficulty(int theDifficulty);
+
     Challenge save(Challenge theUser);
 
     void deleteById(int theId);
