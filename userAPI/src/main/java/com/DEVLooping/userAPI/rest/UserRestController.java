@@ -63,10 +63,10 @@ public class UserRestController {
 
         }
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new ErrorResponse(HttpStatus.OK.value(),
-                        HttpStatus.OK.getReasonPhrase(),
-                        "User logged in successfully.",
-                        0));
+                .body(
+                        theUser
+                
+                );
     }
 
     @GetMapping("/users/{userId}")
@@ -76,6 +76,20 @@ public class UserRestController {
             throw new UserNotFoundException("User id not found - " + userId);
         }
         return theUser;
+    }
+
+    @GetMapping("/users/username/{username}")
+    public ResponseEntity<?> findByUsername(@PathVariable String username) {
+        User theUser = userService.findByUsername(username);
+        if (theUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(),
+                            HttpStatus.NOT_FOUND.getReasonPhrase(),
+                            "User not found with username: " + username,
+                            1));
+        }
+        return ResponseEntity.ok(theUser);
+
     }
 
     @PostMapping("/users/register")
