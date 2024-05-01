@@ -58,7 +58,7 @@ CREATE TABLE `USER` (
     created_at DATE NOT NULL,
     deactivated_at DATE,
     status VARCHAR(255),
-    profile_pic_url VARCHAR(255),
+    profile_pic_url mediumtext,
     user_type_id INTEGER NOT NULL,
     CONSTRAINT USER_USER_TYPE_FK FOREIGN KEY (user_type_id) REFERENCES USER_TYPE(id_usertype) ON DELETE CASCADE ON UPDATE CASCADE
 );
