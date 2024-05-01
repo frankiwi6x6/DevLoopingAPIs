@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 @Table(name = "challenge")
 public class Challenge {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_challenge")
@@ -18,11 +17,19 @@ public class Challenge {
     @Column(name = "desc_challenge")
     private String desc_challenge;
 
+    @Column(name = "content")
+    private String content;
+
+
     @Column(name = "start_at")
     private String start_at;
 
     @Column(name = "end_at")
     private String end_at;
+
+    @Column(name ="CHALLENGE_TYPE_id_type")
+    private int id_type;
+
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "DIFFICULTY_id_difficulty")
@@ -31,13 +38,31 @@ public class Challenge {
     public Challenge() {
     }
 
-    public Challenge(String title, String desc_challenge, String start_at, String end_at, Difficulty difficulty) {
+    
+   
+
+    public Challenge(int id, String title, String desc_challenge, String content, String start_at, String end_at,
+            int id_type, Difficulty difficulty) {
+        this.id = id;
         this.title = title;
         this.desc_challenge = desc_challenge;
+        this.content = content;
         this.start_at = start_at;
         this.end_at = end_at;
+        this.id_type = id_type;
         this.difficulty = difficulty;
     }
+
+    public int getId_type() {
+        return id_type;
+    }
+
+    public void setId_type(int id_type) {
+        this.id_type = id_type;
+    }
+
+
+
 
     public int getId() {
         return id;
@@ -87,8 +112,12 @@ public class Challenge {
         this.difficulty = difficulty;
     }
 
-    
+    public String getContent() {
+        return content;
+    }
 
-
+    public void setContent(String content) {
+        this.content = content;
+    }
 
 }
