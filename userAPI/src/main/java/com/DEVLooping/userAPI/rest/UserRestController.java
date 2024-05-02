@@ -139,6 +139,7 @@ public class UserRestController {
         Date date = cal.getTime();
         theUser.setCreated_at(date);
         theUser.setStatus("active");
+        theUser.setBio(null);
 
         theUser.getUserType().setId(3);
         String encryptedPassword = encryptService.encrypt(theUser.getPassword());

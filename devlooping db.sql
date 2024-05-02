@@ -50,10 +50,11 @@ CREATE TABLE CHALLENGE (
 
 
 -- Definición de tabla USER (depende de USER_TYPE)
+
 CREATE TABLE `USER` (
     id_user INTEGER PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(255) UNIQUE NOT NULL,
-    bio VARCHAR(255) NULL,
+    bio VARCHAR(255),
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hashed VARCHAR(255) NOT NULL,
     created_at DATE NOT NULL,
