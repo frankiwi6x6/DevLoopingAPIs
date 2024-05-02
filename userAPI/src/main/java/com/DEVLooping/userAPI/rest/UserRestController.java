@@ -155,11 +155,12 @@ public class UserRestController {
         if (existingUser == null) {
             throw new UserNotFoundException("User not found with id: " + userId);
         }
-
+        
         existingUser.setUsername(updatedUser.getUsername());
         existingUser.setEmail(updatedUser.getEmail());
         existingUser.setPassword(updatedUser.getPassword());
         existingUser.setUserType(updatedUser.getUserType());
+        existingUser.setBio(updatedUser.getBio());
 
         // Guardar el usuario actualizado en la base de datos
         User savedUser = userService.save(existingUser);
