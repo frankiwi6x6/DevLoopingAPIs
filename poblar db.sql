@@ -1243,15 +1243,15 @@ INSERT INTO CHALLENGE (title, desc_challenge, content, DIFFICULTY_id_difficulty,
 	
 
 -- Insertar datos en la tabla USER
-INSERT INTO `USER` (username, email, password_hashed, created_at, user_type_id, status) VALUES
-    ('admin', 'admin@example.com', 'admin123', '2022-01-01', 1, 'active'),
-    ('moderador1', 'moderador1@example.com', 'mod123', '2022-02-15', 2, 'active'),
-    ('moderador2', 'moderador2@example.com', 'mod456', '2022-03-20', 2, 'active'),
-    ('usuario1', 'usuario1@example.com', 'user123', '2022-04-10', 3, 'active'),
-    ('usuario2', 'usuario2@example.com', 'user456', '2022-05-05', 3, 'active'),
-    ('usuario3', 'usuario3@example.com', 'user789', '2022-06-15', 3, 'active'),
-    ('usuario4', 'usuario4@example.com', 'userABC', '2022-07-20', 3, 'active'),
-    ('usuario5', 'usuario5@example.com', 'userDEF', '2022-08-25', 3, 'active');
+INSERT INTO `USER` (username, email, password_hashed, created_at, user_type_id, status, bio) VALUES
+    ('admin', 'admin@example.com', 'admin123', '2022-01-01', 1, 'active', null),
+    ('moderador1', 'moderador1@example.com', 'mod123', '2022-02-15', 2, 'active', null),
+    ('moderador2', 'moderador2@example.com', 'mod456', '2022-03-20', 2, 'active', null),
+    ('usuario1', 'usuario1@example.com', 'user123', '2022-04-10', 3, 'active', null),
+    ('usuario2', 'usuario2@example.com', 'user456', '2022-05-05', 3, 'active', null),
+    ('usuario3', 'usuario3@example.com', 'user789', '2022-06-15', 3, 'active', null),
+    ('usuario4', 'usuario4@example.com', 'userABC', '2022-07-20', 3, 'active', null),
+    ('usuario5', 'usuario5@example.com', 'userDEF', '2022-08-25', 3, 'active', null);
 
 -- Insertar datos en la tabla PERMISSION_USER
 INSERT INTO PERMISSION_USER (PERMISSION_id_permission, USER_id_user) VALUES

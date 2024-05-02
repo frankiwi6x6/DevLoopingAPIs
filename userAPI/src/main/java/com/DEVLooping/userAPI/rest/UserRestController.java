@@ -159,6 +159,7 @@ public class UserRestController {
         existingUser.setEmail(updatedUser.getEmail());
         existingUser.setPassword(updatedUser.getPassword());
         existingUser.setUserType(updatedUser.getUserType());
+        existingUser.setProfile_pic_url(updatedUser.getProfile_pic_url());
 
         // Guardar el usuario actualizado en la base de datos
         User savedUser = userService.save(existingUser);

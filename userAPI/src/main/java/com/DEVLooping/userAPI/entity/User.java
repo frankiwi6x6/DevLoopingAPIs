@@ -17,6 +17,9 @@ public class User {
     @Column(name = "email")
     private String email;
 
+    @Column (name = "bio")
+    private String bio;
+
     @Column(name = "password_hashed")
     private String password;
 
@@ -106,17 +109,18 @@ public class User {
     public User() {
     }
 
-    public User(int id, String username, String email, String password, Date created_at, UserType userType,
-            String status, Date deactivated_at, String profile_pic_url) {
+    public User(int id, String username, String email, String bio, String password, Date created_at, String status,
+            Date deactivated_at, String profile_pic_url, UserType userType) {
         this.id = id;
         this.username = username;
         this.email = email;
+        this.bio = bio;
         this.password = password;
         this.created_at = created_at;
-        this.userType = userType;
         this.status = status;
         this.deactivated_at = deactivated_at;
         this.profile_pic_url = profile_pic_url;
+        this.userType = userType;
     }
 
     public String getProfile_pic_url() {
@@ -126,5 +130,14 @@ public class User {
     public void setProfile_pic_url(String profile_pic_url) {
         this.profile_pic_url = profile_pic_url;
     }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
 
 }
