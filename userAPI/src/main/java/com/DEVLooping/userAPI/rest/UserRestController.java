@@ -159,12 +159,26 @@ public class UserRestController {
         existingUser.setEmail(updatedUser.getEmail());
         existingUser.setPassword(updatedUser.getPassword());
         existingUser.setUserType(updatedUser.getUserType());
+
+        // Guardar el usuario actualizado en la base de datos
+        User savedUser = userService.save(existingUser);
+        return savedUser;
+    }
+    
+    @PutMapping("/users/{userId}/profile-pic")
+    public User updateProfilePic(@PathVariable int userId, @RequestBody User updatedUser) {
+        User existingUser = userService.findById(userId);
+        if (existingUser == null) {
+            throw new UserNotFoundException("User not found with id: " + userId);
+        }
+
         existingUser.setProfile_pic_url(updatedUser.getProfile_pic_url());
 
         // Guardar el usuario actualizado en la base de datos
         User savedUser = userService.save(existingUser);
         return savedUser;
     }
+
 
     @DeleteMapping("/users/{userId}")
     public User softDeleteUser(@PathVariable int userId) {
