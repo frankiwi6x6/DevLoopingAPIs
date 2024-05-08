@@ -10,7 +10,6 @@ import jakarta.persistence.TypedQuery;
 public class DifficultyDAOJpaImpl implements DifficultyDAO {
 
     private EntityManager entityManager;
-    
 
     @Override
     public List<Difficulty> findAll() {
@@ -25,11 +24,12 @@ public class DifficultyDAOJpaImpl implements DifficultyDAO {
         return difficulty;
 
     }
+
     @Override
     public Difficulty save(Difficulty theDifficulty) {
         Difficulty dbDifficulty = entityManager.merge(theDifficulty);
         return dbDifficulty;
-        
+
     }
 
     @Override
@@ -37,7 +37,7 @@ public class DifficultyDAOJpaImpl implements DifficultyDAO {
         Difficulty dbDifficulty = entityManager.find(Difficulty.class, theId);
         entityManager.remove(dbDifficulty);
 
-        
     }
+    
 
 }

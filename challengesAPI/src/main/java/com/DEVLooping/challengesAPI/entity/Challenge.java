@@ -20,16 +20,15 @@ public class Challenge {
     @Column(name = "content")
     private String content;
 
-
     @Column(name = "start_at")
     private String start_at;
 
     @Column(name = "end_at")
     private String end_at;
 
-    @Column(name ="CHALLENGE_TYPE_id_type")
-    private int id_type;
-
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "CHALLENGE_TYPE_id_type")
+    private ChallengeType challengeType;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "DIFFICULTY_id_difficulty")
@@ -38,31 +37,16 @@ public class Challenge {
     public Challenge() {
     }
 
-    
-   
-
-    public Challenge(int id, String title, String desc_challenge, String content, String start_at, String end_at,
-            int id_type, Difficulty difficulty) {
-        this.id = id;
+    public Challenge(String title, String desc_challenge, String start_at, String end_at, ChallengeType challengeType,
+            Difficulty difficulty, String content) {
         this.title = title;
         this.desc_challenge = desc_challenge;
-        this.content = content;
         this.start_at = start_at;
         this.end_at = end_at;
-        this.id_type = id_type;
+        this.challengeType = challengeType;
         this.difficulty = difficulty;
+        this.content = content;
     }
-
-    public int getId_type() {
-        return id_type;
-    }
-
-    public void setId_type(int id_type) {
-        this.id_type = id_type;
-    }
-
-
-
 
     public int getId() {
         return id;
@@ -118,6 +102,14 @@ public class Challenge {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public ChallengeType getChallengeType() {
+        return challengeType;
+    }
+
+    public void setChallengeType(ChallengeType challengeType) {
+        this.challengeType = challengeType;
     }
 
 }

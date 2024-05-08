@@ -26,6 +26,9 @@ public class User {
     @Column(name = "created_at")
     private Date created_at;
 
+    @Column(name = "verified_at")
+    private Date verified_at;
+
     @Column(name = "status")
     private String status;
 
@@ -68,6 +71,7 @@ public class User {
     public String getEmail() {
         return email;
     }
+    
 
     public void setEmail(String email) {
         this.email = email;
@@ -109,14 +113,17 @@ public class User {
     public User() {
     }
 
-    public User(int id, String username, String email, String bio, String password, Date created_at, String status,
-            Date deactivated_at, String profile_pic_url, UserType userType) {
+    
+
+    public User(int id, String username, String email, String bio, String password, Date created_at, Date verified_at,
+            String status, Date deactivated_at, String profile_pic_url, UserType userType) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.bio = bio;
         this.password = password;
         this.created_at = created_at;
+        this.verified_at = verified_at;
         this.status = status;
         this.deactivated_at = deactivated_at;
         this.profile_pic_url = profile_pic_url;
@@ -137,6 +144,14 @@ public class User {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public Date getVerified_at() {
+        return verified_at;
+    }
+
+    public void setVerified_at(Date verified_at) {
+        this.verified_at = verified_at;
     }
 
 
