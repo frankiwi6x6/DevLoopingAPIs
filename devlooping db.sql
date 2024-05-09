@@ -58,6 +58,7 @@ CREATE TABLE `USER` (
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hashed VARCHAR(255) NOT NULL,
     created_at DATE NOT NULL,
+    verified_at DATE NULL,
     deactivated_at DATE,
     status VARCHAR(255),
     profile_pic_url mediumtext,
@@ -84,23 +85,27 @@ CREATE TABLE ARCHIEVEMENT_USER (
     UNIQUE KEY archievement_user_unique (USER_id_user, ACHIEVEMENT_id_achievement)
 );
 
+CREATE TABLE ANSWER_STATUS (
+	STATUS_ID     INTEGER NOT NULL PRIMARY KEY	,
+    status_name VARCHAR(20) NOT NULL,
+    status_desc varchar(100) not null);
+
 -- Definición de tabla CHALLENGE_USER (depende de USER y CHALLENGE)
 CREATE TABLE CHALLENGE_USER (
     USER_id_user INTEGER NOT NULL,
     CHALLENGE_id_challenge INTEGER NOT NULL,
+    answer_code mediumtext,
+    ANSWER_STATUS_id int not NULL,
+    answer_dedicated_time time null,
+    answer_date datetime not null,
+    tries int null,    
+    CONSTRAINT CAHLLENGE_STATUS_FK FOREIGN KEY (ANSWER_STATUS_id) REFERENCES ANSWER_STATUS(STATUS_ID) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT CHALLENGE_USER_USER_FK FOREIGN KEY (USER_id_user) REFERENCES `USER`(id_user) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT CHALLENGE_USER_CHALLENGE_FK FOREIGN KEY (CHALLENGE_id_challenge) REFERENCES CHALLENGE(id_challenge) ON DELETE CASCADE ON UPDATE CASCADE,
     UNIQUE KEY challenge_user_unique (USER_id_user, CHALLENGE_id_challenge)
 );
 
 
--- Definición de tabla ANSWER (depende de CHALLENGE)
-CREATE TABLE ANSWER (
-    id_answer INTEGER PRIMARY KEY AUTO_INCREMENT,
-    desc_answer VARCHAR(255),
-    CHALLENGE_id_challenge INTEGER NOT NULL,
-    CONSTRAINT ANSWER_CHALLENGE_FK FOREIGN KEY (CHALLENGE_id_challenge) REFERENCES CHALLENGE(id_challenge) ON DELETE CASCADE ON UPDATE CASCADE
-);
 
 -- Definición de tabla POST (depende de USER)
 CREATE TABLE POST (

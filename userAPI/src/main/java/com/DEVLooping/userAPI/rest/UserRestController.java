@@ -1,5 +1,6 @@
 package com.DEVLooping.userAPI.rest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -65,7 +66,7 @@ public class UserRestController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(
                         theUser
-                
+
                 );
     }
 
@@ -130,20 +131,46 @@ public class UserRestController {
         if (theUser.getUserType() == null) {
             theUser.setUserType(new UserType(3)); // Otra forma de inicializarlo podría ser: new UserType(id);
         }
-
-        // Resto del código para guardar el usuario
         theUser.setId(0);
         // Inicializamos la hora de creación del usuario con el huso horario de Chile
         TimeZone tz = TimeZone.getTimeZone("America/Santiago");
         Calendar cal = Calendar.getInstance(tz);
         Date date = cal.getTime();
         theUser.setCreated_at(date);
-        theUser.setStatus("active");
+        theUser.setStatus("not_verified");
         theUser.setBio(null);
 
         theUser.getUserType().setId(3);
         String encryptedPassword = encryptService.encrypt(theUser.getPassword());
         theUser.setPassword(encryptedPassword);
+        User dbUser = userService.save(theUser);
+
+        // Enviar correo de verificación
+        String to = dbUser.getEmail();
+        String subject = "[DevLooping] Verifica tu cuenta de usuario - DevLooping";
+        String text = "Hola " + dbUser.getUsername() + ",\n\n"
+                + "Por favor active su cuenta ingresando al siguiente enlace:\n"
+                + "http://localhost:8080/api/users/verify/" + dbUser.getId() + "\n\n"
+                + "Si usted no creó una cuenta, por favor ignore este mensaje.\n\n"
+                + "Saludos,\nDevLooping Team";
+
+        /* ACA DEBERÍA ENVIAR EL CORREO DE VERIFICACIÓN */
+
+        return ResponseEntity.ok(dbUser);
+    }
+
+    @GetMapping("/users/verify/{userId}")
+    public ResponseEntity<?> verifyUser(@PathVariable int userId) {
+        User theUser = userService.findById(userId);
+        if (theUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(),
+                            HttpStatus.NOT_FOUND.getReasonPhrase(),
+                            "User not found with id: " + userId,
+                            1));
+        }
+
+        theUser.setStatus("verified");
         User dbUser = userService.save(theUser);
 
         return ResponseEntity.ok(dbUser);
@@ -155,7 +182,7 @@ public class UserRestController {
         if (existingUser == null) {
             throw new UserNotFoundException("User not found with id: " + userId);
         }
-        
+
         existingUser.setUsername(updatedUser.getUsername());
         existingUser.setEmail(updatedUser.getEmail());
         existingUser.setPassword(updatedUser.getPassword());
@@ -166,7 +193,7 @@ public class UserRestController {
         User savedUser = userService.save(existingUser);
         return savedUser;
     }
-    
+
     @PutMapping("/users/{userId}/profile-pic")
     public User updateProfilePic(@PathVariable int userId, @RequestBody User updatedUser) {
         User existingUser = userService.findById(userId);
@@ -180,7 +207,6 @@ public class UserRestController {
         User savedUser = userService.save(existingUser);
         return savedUser;
     }
-
 
     @DeleteMapping("/users/{userId}")
     public User softDeleteUser(@PathVariable int userId) {

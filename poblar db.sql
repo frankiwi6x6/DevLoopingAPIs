@@ -32,6 +32,13 @@ INSERT INTO DIFFICULTY (id_difficulty, desc_difficulty) VALUES
 INSERT INTO CHALLENGE_TYPE (id_type, desc_type) VALUES
 (1, 'Desafío'),
 (2, 'Lección');
+
+INSERT INTO ANSWER_STATUS (STATUS_ID, status_name, status_desc) VALUES
+(1, 'Borrador', 'La respuesta se ha guardado como borrador y aún no ha sido enviada.'),
+(2, 'Enviado', 'La respuesta ha sido enviada.');
+
+
+
     
 -- Insertar datos en la tabla CHALLENGE
 INSERT INTO CHALLENGE (title, desc_challenge, content, DIFFICULTY_id_difficulty, CHALLENGE_TYPE_id_type, start_at, end_at) VALUES
