@@ -11,7 +11,7 @@
 	<groupId>com.frankiwi</groupId>
 	<artifactId>challengesAPI</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>answersAPI</name>
+	<name>challengesAPI</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>

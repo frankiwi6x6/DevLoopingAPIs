@@ -13,7 +13,6 @@ public class UserDAOJpaImpl implements UserDAO {
 
     private EntityManager entityManager;
 
-
     public UserDAOJpaImpl(EntityManager theEntityManager) {
         entityManager = theEntityManager;
     }

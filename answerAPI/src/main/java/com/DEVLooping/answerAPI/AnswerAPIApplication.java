@@ -1,4 +1,4 @@
-package com.DEVLooping.userAPI;
+package com.DEVLooping.answerAPI;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,19 +9,19 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import io.swagger.v3.oas.models.OpenAPI;
 
 @SpringBootApplication
-public class UserAPIApplication {
+public class AnswerAPIApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(UserAPIApplication.class, args);
+		SpringApplication.run(AnswerAPIApplication.class, args);
 
 
 	}
 	@Bean
 	public OpenAPI customOpenAPI(){
 		return new OpenAPI().info(new io.swagger.v3.oas.models.info.Info()
-		.title("Devlooping | API de Usuarios")
+		.title("Devlooping | API de Respuestas")
 		.version("1.0")
-		.description("Documentación para la API de gestión de usuarios de Devlooping"));
+		.description("Documentación para la API de gestión de respuestas a los desafíos de Devlooping"));
 	}
 
 	@Bean

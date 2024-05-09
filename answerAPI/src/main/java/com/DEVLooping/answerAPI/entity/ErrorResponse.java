@@ -1,4 +1,4 @@
-package com.devlooping.answersAPI.entity;
+package com.DEVLooping.answerAPI.entity;
 
 public class ErrorResponse {
     private int http_status;
