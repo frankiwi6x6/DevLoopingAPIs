@@ -91,15 +91,18 @@ CREATE TABLE ANSWER_STATUS (
     status_desc varchar(100) not null);
 
 -- Definición de tabla CHALLENGE_USER (depende de USER y CHALLENGE)
+DROP TABLE CHALLENGE_USER;
 CREATE TABLE CHALLENGE_USER (
+	id_challenge_user int PRIMARY KEY NOT NULL AUTO_INCREMENT,
     USER_id_user INTEGER NOT NULL,
     CHALLENGE_id_challenge INTEGER NOT NULL,
     answer_code mediumtext,
     ANSWER_STATUS_id int not NULL,
-    answer_dedicated_time time null,
-    answer_date datetime not null,
+    segundos_dedicados int not null,
+    start_date datetime not null,
+    end_date datetime null,
     tries int null,    
-    CONSTRAINT CAHLLENGE_STATUS_FK FOREIGN KEY (ANSWER_STATUS_id) REFERENCES ANSWER_STATUS(STATUS_ID) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT CHALLENGE_STATUS_FK FOREIGN KEY (ANSWER_STATUS_id) REFERENCES ANSWER_STATUS(STATUS_ID) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT CHALLENGE_USER_USER_FK FOREIGN KEY (USER_id_user) REFERENCES `USER`(id_user) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT CHALLENGE_USER_CHALLENGE_FK FOREIGN KEY (CHALLENGE_id_challenge) REFERENCES CHALLENGE(id_challenge) ON DELETE CASCADE ON UPDATE CASCADE,
     UNIQUE KEY challenge_user_unique (USER_id_user, CHALLENGE_id_challenge)
