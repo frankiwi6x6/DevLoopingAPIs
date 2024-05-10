@@ -29,6 +29,16 @@
             "projectName": "com.frankiwi-challengesAPI",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-AnswerAPIApplication<answersAPI>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.DEVLooping.answerAPI.AnswerAPIApplication",
+            "projectName": "answersAPI",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }

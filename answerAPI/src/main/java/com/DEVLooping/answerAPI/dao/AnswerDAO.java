@@ -14,7 +14,7 @@ public interface AnswerDAO {
 
     List<Answer> findAllUserAnswers(int theId);
 
-    Answer findByChallengeAndUserId(int challengeId, int userId);
+    Answer findByChallengeAndUserId(int challengeId , int userId);
 
     void save(Answer theAnswer);
 

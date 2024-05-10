@@ -1,5 +1,6 @@
 package com.DEVLooping.answerAPI.rest;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -86,37 +87,73 @@ public class AnswerRestController {
                     HttpStatus.NOT_FOUND).body(
                             new ErrorResponse(HttpStatus.NOT_FOUND.value(),
                                     HttpStatus.NOT_FOUND.getReasonPhrase(),
-                                    "No challenges found with answer id " + answerId + " and user id " + userId));
+                                    "El usuario "  + userId+ " no ha iniciado el reto con id: " + answerId));
         }
         return ResponseEntity.ok(theAnswer);
     }
 
-    @PostMapping("/answers/start")
-    public ResponseEntity<Answer> startAnswer(@RequestBody Answer theAnswer) {
-        theAnswer.setId(0);
-        theAnswer.setStart_date(new Date());
-        theAnswer.setEndDate(null);
-        theAnswer.setTries(0);
-        theAnswer.setId_status(1);
+    @PostMapping("/answers/start/{userId}/{challengeId}")
+    public ResponseEntity<?> start(Answer theAnswer, @PathVariable int userId, @PathVariable int challengeId) {
+        try {
+            theAnswer.setId(0);
+            theAnswer.setId_user(userId);
+            theAnswer.setId_challenge(challengeId);
+            theAnswer.setStart_date(new Date());
+            theAnswer.setEndDate(null);
+            theAnswer.setTries(0);
+            theAnswer.setId_status(1);
 
-        answerService.save(theAnswer);
-        return new ResponseEntity<>(theAnswer, HttpStatus.CREATED);
+            answerService.save(theAnswer);
+            return new ResponseEntity<>(theAnswer, HttpStatus.CREATED);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: El registro ya existe.");
+        }
     }
 
     @PutMapping("/answers/draft/{userId}/{challengeId}")
     public ResponseEntity<?> saveDraft(@RequestBody Answer theAnswer, @PathVariable int userId, @PathVariable int challengeId) {
-        Answer answer = answerService.findByChallengeAndUserId(challengeId, userId);
-        if (answer == null) {
-            return ResponseEntity.status(
-                    HttpStatus.NOT_FOUND).body(
-                            new ErrorResponse(HttpStatus.NOT_FOUND.value(),
-                                    HttpStatus.NOT_FOUND.getReasonPhrase(),
-                                    "No challenges found with challenge id " + challengeId + " and user id " + userId));
-        }
-        answer.setAnswer_code(theAnswer.getAnswer_code());
-        answer.setSegundos_dedicados(theAnswer.getSegundos_dedicados());
+        try {
+            Answer answer = answerService.findByChallengeAndUserId(challengeId, userId);
+            if (answer == null) {
+                return ResponseEntity.status(
+                        HttpStatus.NOT_FOUND).body(
+                                new ErrorResponse(HttpStatus.NOT_FOUND.value(),
+                                        HttpStatus.NOT_FOUND.getReasonPhrase(),
+                                        "No challenges found with challenge id " + challengeId + " and user id " + userId));
+            }
+            answer.setAnswer_code(theAnswer.getAnswer_code());
+            answer.setSegundos_dedicados(theAnswer.getSegundos_dedicados());
 
-        answerService.save(answer);
-        return ResponseEntity.ok(answer);
+            answerService.save(answer);
+            return ResponseEntity.ok(answer);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: El registro ya existe.");
+        }
     }
+
+    @PutMapping("/answers/sent/{userId}/{challengeId}")
+    public ResponseEntity<?> sendAnswer(@RequestBody Answer theAnswer, @PathVariable int userId, @PathVariable int challengeId) {
+        try {
+            Answer answer = answerService.findByChallengeAndUserId(challengeId, userId);
+            if (answer == null) {
+                return ResponseEntity.status(
+                        HttpStatus.NOT_FOUND).body(
+                                new ErrorResponse(HttpStatus.NOT_FOUND.value(),
+                                        HttpStatus.NOT_FOUND.getReasonPhrase(),
+                                        "No challenges found with challenge id " + challengeId + " and user id " + userId));
+            }
+            answer.setAnswer_code(theAnswer.getAnswer_code());
+            answer.setSegundos_dedicados(theAnswer.getSegundos_dedicados());
+            answer.setEndDate(new Date());
+            answer.setTries(answer.getTries() + 1);
+            answer.setId_status(2);
+
+            answerService.save(answer);
+            return ResponseEntity.ok(answer);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: El registro ya existe.");
+        }
+    }
+    
+
 }
