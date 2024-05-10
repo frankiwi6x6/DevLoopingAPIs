@@ -1,8 +1,10 @@
 package com.DEVLooping.answerAPI.dao;
 
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.DEVLooping.answerAPI.entity.Answer;
 import java.util.List;
@@ -46,7 +48,8 @@ public class AnswerDAOJpaImpl implements AnswerDAO {
         TypedQuery<Answer> theQuery = entityManager.createQuery("FROM Answer WHERE id_user=:id_user AND id_challenge=:id_challenge", Answer.class);
         theQuery.setParameter("id_user", userId);
         theQuery.setParameter("id_challenge", challenge);
-        return theQuery.getSingleResult();
+        List<Answer> results = theQuery.getResultList();
+        return results.isEmpty() ? null : results.get(0);
     }
 
     @Override
