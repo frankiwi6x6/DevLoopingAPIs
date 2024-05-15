@@ -37,14 +37,17 @@ public class PostDAOJpaImpl implements PostDAO {
 
     @Override
     public void borrarPost(int id) {
-        TypedQuery<Post> consulta = entityManager.createQuery("delete from Post where id_post = :id", Post.class);
-        consulta.setParameter("id", id);
-        consulta.executeUpdate();
+        // En lugar de eliminar de la base de datos, quiero actualizar la fecha de eliminación y el estado del post a 3
+        Post post = entityManager.find(Post.class, id);
+        post.setDeletedAt(new java.util.Date());
+        post.setState(3);
+        entityManager.merge(post);
+
     }
 
     @Override
     public List<Post> buscarPorUsuario(int idUsuario) {
-        TypedQuery<Post> consulta = entityManager.createQuery("from Post where userId = :userId", Post.class);
+        TypedQuery<Post> consulta = entityManager.createQuery("from Post where userIdUser = :userId", Post.class);
         consulta.setParameter("userId", idUsuario);
         return consulta.getResultList();
     }

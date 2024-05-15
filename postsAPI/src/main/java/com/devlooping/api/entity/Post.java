@@ -1,6 +1,5 @@
 package com.devlooping.api.entity;
 
-
 import java.util.Date;
 
 import jakarta.persistence.Column;
@@ -13,36 +12,37 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "post")
 public class Post {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column (name = "id_post")
+    @Column(name = "id_post")
     private int id;
-    @Column (name = "desc_post")
-    private String descPost;
-    @Column (name = "img_post")
-    private byte[] imgPost;
-    @Column (name = "like_post")
-    private int likePost;
-    @Column (name = "created_at")
-    private Date createdAt;
-    @Column (name = "updated_at")
-    private Date updatedAt;
-    @Column (name = "USER_id_user")
-    private int userId;
 
-    // Constructor
-    public Post(int id, String descPost, byte[] imgPost, int likePost, Date createdAt, Date updatedAt, int userId) {
-    
-        this.id = id;
-        this.descPost = descPost;
-        this.imgPost = imgPost;
-        this.likePost = likePost;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.userId = userId;
+    @Column(name = "post_content")
+    private String content;
+
+    @Column(name = "post_state_id")
+    private int state;
+
+    @Column(name = "uploaded_at")
+    private Date uploadedAt;
+
+    @Column(name = "deleted_at")
+    private Date deletedAt;
+
+    @Column(name = "USER_id_user")
+    private int userIdUser;
+
+    public Post() {
     }
 
-    // Getters and setters
+    public Post(String content, int state, Date uploadedAt, Date deletedAt, int userIdUser) {
+        this.content = content;
+        this.state = state;
+        this.uploadedAt = uploadedAt;
+        this.deletedAt = deletedAt;
+        this.userIdUser = userIdUser;
+    }
 
     public int getId() {
         return id;
@@ -52,57 +52,50 @@ public class Post {
         this.id = id;
     }
 
-    public String getDescPost() {
-        return descPost;
+    public String getContent() {
+        return content;
     }
 
-    public void setDescPost(String descPost) {
-        if (descPost == null || descPost.trim().isEmpty()) {
-            throw new IllegalArgumentException("Description cannot be empty");
-        }
-        if (descPost.length() > 255) {
-            throw new IllegalArgumentException("Description is too long");
-        }
-        this.descPost = descPost;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public byte[] getImgPost() {
-        return imgPost;
+    public int getState() {
+        return state;
     }
 
-    public void setImgPost(byte[] imgPost) {
-        this.imgPost = imgPost;
+    public void setState(int state) {
+        this.state = state;
     }
 
-    public int getLikePost() {
-        return likePost;
+    public Date getUploadedAt() {
+        return uploadedAt;
     }
 
-    public void setLikePost(int likePost) {
-        this.likePost = likePost;
+    public void setUploadedAt(Date uploadedAt) {
+        this.uploadedAt = uploadedAt;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public Date getDeletedAt() {
+        return deletedAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setDeletedAt(Date deletedAt) {
+        this.deletedAt = deletedAt;
     }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
+    public int getUserIdUser() {
+        return userIdUser;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setUserIdUser(int userIdUser) {
+        this.userIdUser = userIdUser;
     }
 
-    public int getUserId() {
-        return userId;
+    @Override
+    public String toString() {
+        return "Post [content=" + content + ", deletedAt=" + deletedAt + ", id=" + id + ", state=" + state
+                + ", uploadedAt=" + uploadedAt + ", userIdUser=" + userIdUser + "]";
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
 }

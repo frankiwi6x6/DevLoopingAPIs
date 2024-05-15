@@ -102,7 +102,6 @@ CREATE TABLE ANSWER_STATUS (
     status_desc varchar(100) not null);
 
 -- Definición de tabla CHALLENGE_USER (depende de USER y CHALLENGE)
-DROP TABLE CHALLENGE_USER;
 CREATE TABLE CHALLENGE_USER (
 	id_challenge_user int PRIMARY KEY NOT NULL AUTO_INCREMENT,
     USER_id_user INTEGER NOT NULL,
@@ -119,27 +118,34 @@ CREATE TABLE CHALLENGE_USER (
     UNIQUE KEY challenge_user_unique (USER_id_user, CHALLENGE_id_challenge)
 );
 
+CREATE TABLE POST_STATE(
+	id_post_state integer primary key auto_increment,
+    state_name varchar(50) not null
+);
 
 
 -- Definición de tabla POST (depende de USER)
 CREATE TABLE POST (
     id_post INTEGER PRIMARY KEY AUTO_INCREMENT,
-    desc_post VARCHAR(255) NOT NULL,
-    img_post BLOB,
-    like_post INTEGER,
-    created_at DATETIME NOT NULL,
-    updated_at DATETIME,
+    post_content longtext not null,
+    post_state_id INTEGER NOT NULL,
+    uploaded_at datetime  not null,
+    deleted_at  datetime,
     USER_id_user INTEGER NOT NULL,
-    CONSTRAINT POST_USER_FK FOREIGN KEY (USER_id_user) REFERENCES `USER`(id_user) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT POST_USER_FK FOREIGN KEY (USER_id_user) REFERENCES `USER`(id_user) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT POST_STATE_FK FOREIGN KEY (post_state_id) REFERENCES `POST_STATE`(id_post_state) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- Definición de tabla COMMENT (depende de USER y POST)
 CREATE TABLE COMMENT (
     id_comment INTEGER PRIMARY KEY AUTO_INCREMENT,
-    desc_comment TEXT NOT NULL,
-    created_at DATETIME NOT NULL,
+    comment_content longtext not null,
+    post_state_id INTEGER NOT NULL,
+    uploaded_at datetime  not null,
+    deleted_at  datetime,
     USER_id_user INTEGER NOT NULL,
     POST_id_post INTEGER NOT NULL,
-    CONSTRAINT COMMENT_USER_FK FOREIGN KEY (USER_id_user) REFERENCES `USER`(id_user) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT COMMENT_POST_FK FOREIGN KEY (POST_id_post) REFERENCES POST(id_post) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT COMMENT_USER_FK FOREIGN KEY (USER_id_user) REFERENCES USER(id_user) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT COMMENT_POST_FK FOREIGN KEY (POST_id_post) REFERENCES POST(id_post) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT COMMENT_STATE_FK FOREIGN KEY (post_state_id) REFERENCES POST_STATE(id_post_state) ON DELETE CASCADE ON UPDATE CASCADE
 );
