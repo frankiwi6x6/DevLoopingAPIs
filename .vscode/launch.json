@@ -39,6 +39,16 @@
             "projectName": "answersAPI",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-PostsAPIApplication<postsAPI>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.devlooping.api.PostsAPIApplication",
+            "projectName": "postsAPI",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }

@@ -1,5 +1,7 @@
 package com.DEVLooping.challengesAPI.entity;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -33,20 +35,32 @@ public class Challenge {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "DIFFICULTY_id_difficulty")
     private Difficulty difficulty;
+    
+    @OneToMany(mappedBy = "challenge", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<ExpectedOutput> expectedOutputs;
+
 
     public Challenge() {
     }
 
-    public Challenge(String title, String desc_challenge, String start_at, String end_at, ChallengeType challengeType,
-            Difficulty difficulty, String content) {
+    
+
+
+    public Challenge(int id, String title, String desc_challenge, String content, String start_at, String end_at,
+            ChallengeType challengeType, Difficulty difficulty, List<ExpectedOutput> expectedOutputs) {
+        this.id = id;
         this.title = title;
         this.desc_challenge = desc_challenge;
+        this.content = content;
         this.start_at = start_at;
         this.end_at = end_at;
         this.challengeType = challengeType;
         this.difficulty = difficulty;
-        this.content = content;
+        this.expectedOutputs = expectedOutputs;
     }
+
+
+
 
     public int getId() {
         return id;
@@ -110,6 +124,20 @@ public class Challenge {
 
     public void setChallengeType(ChallengeType challengeType) {
         this.challengeType = challengeType;
+    }
+
+
+
+
+    public List<ExpectedOutput> getExpectedOutputs() {
+        return expectedOutputs;
+    }
+
+
+
+
+    public void setExpectedOutputs(List<ExpectedOutput> expectedOutputs) {
+        this.expectedOutputs = expectedOutputs;
     }
 
 }

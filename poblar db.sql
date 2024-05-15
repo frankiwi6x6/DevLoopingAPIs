@@ -1249,6 +1249,9 @@ INSERT INTO CHALLENGE (title, desc_challenge, content, DIFFICULTY_id_difficulty,
     ('Ordenar un array', 'Crear una función que ordene un array de números de menor a mayor', NULL, 3, 1, '2023-08-01', NULL);
 	
 
+INSERT INTO EXPECTED_OUTPUT
+
+
 -- Insertar datos en la tabla USER
 INSERT INTO `USER` (username, email, password_hashed, created_at, user_type_id, status, bio) VALUES
     ('admin', 'admin@example.com', 'admin123', '2022-01-01', 1, 'active', null),
