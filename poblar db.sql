@@ -1247,10 +1247,6 @@ INSERT INTO CHALLENGE (title, desc_challenge, content, DIFFICULTY_id_difficulty,
   }
 ]', 1, 2, '2024-05-1', null ),
     ('Ordenar un array', 'Crear una función que ordene un array de números de menor a mayor', NULL, 3, 1, '2023-08-01', NULL);
-	
-
-INSERT INTO EXPECTED_OUTPUT
-
 
 -- Insertar datos en la tabla USER
 INSERT INTO `USER` (username, email, password_hashed, created_at, user_type_id, status, bio) VALUES
@@ -1276,4 +1272,9 @@ INSERT INTO ARCHIEVEMENT_USER (USER_id_user, ACHIEVEMENT_id_achievement, created
     (5, 1, '2022-05-05'), (6, 1, '2022-06-15'), (7, 1, '2022-07-20'), (8, 1, '2022-08-25'),
     (4, 2, '2022-05-01'), (5, 2, '2022-06-01'), (6, 2, '2022-07-01'), (7, 2, '2022-08-01'),
     (1, 3, '2023-01-01'), (2, 3, '2023-02-01'), (3, 3, '2023-03-01');
+
+
+INSERT INTO POST_STATE (state_name) VALUES ('Borrador');
+INSERT INTO POST_STATE (state_name) VALUES ('Publicado');
+INSERT INTO POST_STATE (state_name) VALUES ('Eliminado');
 
