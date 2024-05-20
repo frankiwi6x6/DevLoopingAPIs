@@ -1,21 +1,59 @@
 package com.devlooping.api.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 
+import com.devlooping.api.dao.PostDAO;
 import com.devlooping.api.entity.Post;
+import com.devlooping.api.entity.PostSummary;
 
- 
-public interface PostService {
-    
-   List<Post> buscarTodo();
+@Service
+public class PostService {
 
-   Post buscarPorId (int id);
+    @Autowired
+    private PostDAO postDAO;
 
-   void guardarPost (Post newpost);
+    public List<PostSummary> getAllPosts() {
+        return postDAO.getAllPostSummaries();
+    }
 
-   void borrarPost (int id);
+    public List<PostSummary> getPostsByUser(Long idUser) {
+        return postDAO.getPostSummariesByUser(idUser);
+    }
 
-   List<Post> buscarPorUsuario (int idUsuario);
-    
+    public List<PostSummary> getAllPublishedPosts() {
+        return postDAO.getAllPublishedPostSummaries();
+    }
+
+    public List<PostSummary> getPublishedPostsByUser(Long idUser) {
+        return postDAO.getPublishedPostSummariesByUser(idUser);
+    }
+
+    public PostSummary getPostById(Long idPost) {
+        return postDAO.getPostSummaryById(idPost);
+    }
+
+    public void savePost(Post post) {
+        postDAO.savePost(post);
+    }
+
+    public void updatePost(Long idPost, String postContent, Long idUser) {
+
+        postDAO.updatePost(idPost, idUser, postContent);
+    }
+
+    public void deletePost(Long idPost) {
+        postDAO.deletePost(idPost);
+    }
+
+    public void publishPost(Long idPost) {
+        postDAO.publishPost(idPost);
+    }
+
+    public void hidePost(Long idPost) {
+        postDAO.hidePost(idPost);
+    }
+
 }
-

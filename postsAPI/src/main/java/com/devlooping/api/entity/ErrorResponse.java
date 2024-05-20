@@ -1,22 +1,34 @@
 package com.devlooping.api.entity;
 
+import java.time.LocalDateTime;
+
 public class ErrorResponse {
-    private int http_status;
-    private String status_description;
+    private int httpStatus;
+    private String statusDescription;
     private String message;
+    private LocalDateTime timestamp;
 
-    public ErrorResponse(int http_status, String status_description, String message) {
-        this.http_status = http_status;
-        this.status_description = status_description;
+    public ErrorResponse(int httpStatus, String statusDescription, String message) {
+        this.httpStatus = httpStatus;
+        this.statusDescription = statusDescription;
         this.message = message;
+        this.timestamp = LocalDateTime.now();
     }
 
-    public int getHttp_status() {
-        return http_status;
+    public int getHttpStatus() {
+        return httpStatus;
     }
 
-    public void setHttp_status(int http_status) {
-        this.http_status = http_status;
+    public void setHttpStatus(int httpStatus) {
+        this.httpStatus = httpStatus;
+    }
+
+    public String getStatusDescription() {
+        return statusDescription;
+    }
+
+    public void setStatusDescription(String statusDescription) {
+        this.statusDescription = statusDescription;
     }
 
     public String getMessage() {
@@ -27,11 +39,13 @@ public class ErrorResponse {
         this.message = message;
     }
 
-    public String getStatus_description() {
-        return status_description;
+    public LocalDateTime getTimestamp() {
+        return timestamp;
     }
 
-    public void setStatus_description(String status_description) {
-        this.status_description = status_description;
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
+
+
 }
