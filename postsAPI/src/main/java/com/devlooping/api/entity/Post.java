@@ -1,6 +1,6 @@
 package com.devlooping.api.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,90 +12,102 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "post")
 public class Post {
-
+    
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_post")
-    private int id;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
     @Column(name = "post_content")
-    private String content;
+    private String postContent;
 
     @Column(name = "post_state_id")
-    private int state;
-
-    @Column(name = "uploaded_at")
-    private Date uploadedAt;
-
-    @Column(name = "deleted_at")
-    private Date deletedAt;
+    private Long postStateId;
 
     @Column(name = "USER_id_user")
-    private int userIdUser;
+    private Long userId;
+    
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
     public Post() {
     }
 
-    public Post(String content, int state, Date uploadedAt, Date deletedAt, int userIdUser) {
-        this.content = content;
-        this.state = state;
-        this.uploadedAt = uploadedAt;
+    public Post(Long id, String postContent, Long postStateId, Long userId, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt) {
+        this.id = id;
+        this.postContent = postContent;
+        this.postStateId = postStateId;
+        this.userId = userId;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
         this.deletedAt = deletedAt;
-        this.userIdUser = userIdUser;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getContent() {
-        return content;
+    public String getPostContent() {
+        return postContent;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setPostContent(String postContent) {
+        this.postContent = postContent;
     }
 
-    public int getState() {
-        return state;
+    public Long getPostStateId() {
+        return postStateId;
     }
 
-    public void setState(int state) {
-        this.state = state;
+    public void setPostStateId(Long postStateId) {
+        this.postStateId = postStateId;
     }
 
-    public Date getUploadedAt() {
-        return uploadedAt;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUploadedAt(Date uploadedAt) {
-        this.uploadedAt = uploadedAt;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public Date getDeletedAt() {
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public LocalDateTime getDeletedAt() {
         return deletedAt;
     }
 
-    public void setDeletedAt(Date deletedAt) {
+    public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
 
-    public int getUserIdUser() {
-        return userIdUser;
-    }
+    
 
-    public void setUserIdUser(int userIdUser) {
-        this.userIdUser = userIdUser;
-    }
 
-    @Override
-    public String toString() {
-        return "Post [content=" + content + ", deletedAt=" + deletedAt + ", id=" + id + ", state=" + state
-                + ", uploadedAt=" + uploadedAt + ", userIdUser=" + userIdUser + "]";
-    }
+
 
 }

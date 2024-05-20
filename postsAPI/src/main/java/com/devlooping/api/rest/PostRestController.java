@@ -2,98 +2,128 @@ package com.devlooping.api.rest;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
 import com.devlooping.api.entity.ErrorResponse;
 import com.devlooping.api.entity.Post;
+import com.devlooping.api.entity.PostSummary;
+import com.devlooping.api.exception.ForbiddenException;
+import com.devlooping.api.exception.PostNotFoundException;
 import com.devlooping.api.services.PostService;
 
 @RestController
 @RequestMapping("/api")
 public class PostRestController {
 
-    private final PostService service;
-    ErrorResponse errorResponse;
-
-    public PostRestController(PostService pService) {
-        this.service = pService;
-    }
+    @Autowired
+    private PostService postService;
 
     @GetMapping("/posts")
-    public ResponseEntity<?> buscarTodo() {
-        List<Post> posts = service.buscarTodo();
-        if (posts.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(),
-                            HttpStatus.NOT_FOUND.getReasonPhrase(),
-                            "No hay posts disponibles"));
+    public ResponseEntity<?> getAllPosts() {
+        List<PostSummary> posts = postService.getAllPosts();
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+    @GetMapping("/posts/published")
+    public ResponseEntity<?> getAllPublishedPosts() {
+        List<PostSummary> posts = postService.getAllPublishedPosts();
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+    @GetMapping("/posts/published/user/{idUser}")
+    public ResponseEntity<?> getPublishedPostsByUser(@PathVariable Long idUser) {
+        List<PostSummary> posts = postService.getPublishedPostsByUser(idUser);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+    @GetMapping("/posts/user/{idUser}")
+    public ResponseEntity<?> getPostsByUser(@PathVariable Long idUser) {
+        List<PostSummary> posts = postService.getPostsByUser(idUser);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+    @GetMapping("/posts/{idPost}")
+    public ResponseEntity<?> getPostById(@PathVariable Long idPost) {
+        try {
+            PostSummary post = postService.getPostById(idPost);
+            return new ResponseEntity<>(post, HttpStatus.OK);
+        } catch (PostNotFoundException e) {
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Post Not Found", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.ok(posts);
     }
 
-    @GetMapping("/post/{postId}")
-    public ResponseEntity<?> buscarPorId(@PathVariable int postId) {
-        Post post = service.buscarPorId(postId);
-        if (post == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(),
-                            HttpStatus.NOT_FOUND.getReasonPhrase(),
-                            "No se encontró el post con ID: " + postId));
+    @PostMapping("/posts")
+    public ResponseEntity<?> savePost(@RequestBody Post post) {
+        try {
+            postService.savePost(post);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Bad Request", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok(post);
     }
 
-    @GetMapping("/posts/user/{userId}")
-    public ResponseEntity<?> buscarPorUsuario(@PathVariable int userId) {
-        List<Post> posts = service.buscarPorUsuario(userId);
-        if (posts.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(),
-                            HttpStatus.NOT_FOUND.getReasonPhrase(),
-                            "No se encontraron posts para el usuario con ID: " + userId));
+    @PutMapping("/posts/{idPost}/{idUser}")
+    public ResponseEntity<?> updatePost(@RequestBody String postContent, @PathVariable Long idPost, @PathVariable Long idUser) {
+        try {
+            postService.updatePost(idPost, postContent,idUser );
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (PostNotFoundException e) {
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Post Not Found", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        } catch (ForbiddenException e) {
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.FORBIDDEN.value(), "Forbidden", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
         }
-        return ResponseEntity.ok(posts);
     }
 
-    @PostMapping("/post")
-    public ResponseEntity<?> guardarPost(@RequestBody Post post) {
-        service.guardarPost(post);
-        return ResponseEntity.ok(post);
-    }
-
-    @PutMapping("/post")
-    public ResponseEntity<?> actualizarPost(@RequestBody Post post) {
-        Post postActual = service.buscarPorId(post.getId());
-        if (postActual == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(),
-                            HttpStatus.NOT_FOUND.getReasonPhrase(),
-                            "No se encontró el post con ID: " + post.getId()));
+    @DeleteMapping("/posts/{idPost}")
+    public ResponseEntity<?> deletePost(@PathVariable Long idPost) {
+        try {
+            postService.deletePost(idPost);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (PostNotFoundException e) {
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Post Not Found", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
         }
-        service.guardarPost(post);
-        return ResponseEntity.ok(post);
     }
 
-    @DeleteMapping("/post/{postId}")
-    public ResponseEntity<?> borrarPost(@PathVariable int postId) {
-        Post post = service.buscarPorId(postId);
-        if (post == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(),
-                            HttpStatus.NOT_FOUND.getReasonPhrase(),
-                            "No se encontró el post con ID: " + postId));
+    @PutMapping("/posts/publish/{idPost}")
+    public ResponseEntity<?> publishPost(@PathVariable Long idPost) {
+        try {
+            postService.publishPost(idPost);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (PostNotFoundException e) {
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Post Not Found", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
         }
-        service.borrarPost(postId);
-        return ResponseEntity.ok(post);
     }
 
+    @PutMapping("/posts/hide/{idPost}")
+    public ResponseEntity<?> hidePost(@PathVariable Long idPost) {
+        try {
+            postService.hidePost(idPost);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (PostNotFoundException e) {
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Post Not Found", e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @ExceptionHandler(PostNotFoundException.class)
+    public final ResponseEntity<ErrorResponse> handlePostNotFoundException(PostNotFoundException ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Post Not Found", ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public final ResponseEntity<ErrorResponse> handleForbiddenException(ForbiddenException ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.FORBIDDEN.value(), "Forbidden", ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+    }
 }
