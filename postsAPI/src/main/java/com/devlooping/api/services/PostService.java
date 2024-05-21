@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.devlooping.api.dao.PostDAO;
 import com.devlooping.api.entity.Comment;
+import com.devlooping.api.entity.CommentSummary;
 import com.devlooping.api.entity.Post;
 import com.devlooping.api.entity.PostSummary;
 
@@ -69,11 +70,11 @@ public class PostService {
         postDAO.updateComment(idComment, commentContent);
     }
 
-    public List<Comment> getCommentsByPost(Long idPost) {
+    public List<CommentSummary> getCommentsByPost(Long idPost) {
         return postDAO.getCommentsByPost(idPost);
     }
 
-    public Comment getCommentById(Long idComment) {
+    public CommentSummary getCommentById(Long idComment) {
         return postDAO.getCommentById(idComment);
     }
 

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 
 import com.devlooping.api.entity.Comment;
+import com.devlooping.api.entity.CommentSummary;
 import com.devlooping.api.entity.ErrorResponse;
 import com.devlooping.api.entity.Post;
 import com.devlooping.api.entity.PostSummary;
@@ -118,7 +119,7 @@ public class PostRestController {
 
     @GetMapping("/posts/{idPost}/comments")
     public ResponseEntity<?> getCommentsByPost(@PathVariable Long idPost) {
-        List<Comment> comments = postService.getCommentsByPost(idPost);
+        List<CommentSummary> comments = postService.getCommentsByPost(idPost);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
@@ -129,13 +130,13 @@ public class PostRestController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PutMapping("/posts/{idPost}/comments/{idComment}")
+    @PutMapping("/posts/comments/{idComment}")
     public ResponseEntity<?> updateComment(@RequestBody String commentContent, @PathVariable Long idComment) {
         postService.updateComment(idComment, commentContent);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/posts/{idPost}/comments/{idComment}")
+    @DeleteMapping("/posts/comments/{idComment}")
     public ResponseEntity<?> deleteComment(@PathVariable Long idComment) {
         postService.deleteComment(idComment);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -143,7 +144,7 @@ public class PostRestController {
 
     @GetMapping("/posts/comments/{idComment}")
     public ResponseEntity<?> getCommentById(@PathVariable Long idComment) {
-        Comment comment = postService.getCommentById(idComment);
+        CommentSummary comment = postService.getCommentById(idComment);
         return new ResponseEntity<>(comment, HttpStatus.OK);
     }
 

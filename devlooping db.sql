@@ -181,5 +181,16 @@ SELECT p.id_post AS id_post,
     FROM Post p 
     JOIN post_state ps ON p.post_state_id = ps.id_post_state
     JOIN User u ON p.USER_id_user = u.id_user;
-        
 
+DROP VIEW IF EXISTS comment_summary_view;
+CREATE VIEW comment_summary_view AS;
+ SELECT 	c.id_comment as id_comment,
+		c.comment_content as comment_content,
+        c.post_state_id as post_state_id,
+        c.created_at as created_at,
+        c.deleted_at as deleted_at,
+        u.id_user AS user_id,
+        p.id_post AS post_id
+FROM COMMENT c
+JOIN User u ON c.USER_id_user = u.id_user
+JOIN post p ON c.POST_id_post = p.id_post;
