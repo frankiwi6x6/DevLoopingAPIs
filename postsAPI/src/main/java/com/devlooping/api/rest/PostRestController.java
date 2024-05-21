@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 
+import com.devlooping.api.entity.Comment;
 import com.devlooping.api.entity.ErrorResponse;
 import com.devlooping.api.entity.Post;
 import com.devlooping.api.entity.PostSummary;
@@ -114,6 +115,38 @@ public class PostRestController {
             return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/posts/{idPost}/comments")
+    public ResponseEntity<?> getCommentsByPost(@PathVariable Long idPost) {
+        List<Comment> comments = postService.getCommentsByPost(idPost);
+        return new ResponseEntity<>(comments, HttpStatus.OK);
+    }
+
+    @PostMapping("/posts/{idPost}/comments")
+    public ResponseEntity<?> saveComment(@RequestBody Comment comment, @PathVariable Long idPost) {
+        comment.setPostId(idPost);
+        postService.saveComment(comment);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PutMapping("/posts/{idPost}/comments/{idComment}")
+    public ResponseEntity<?> updateComment(@RequestBody String commentContent, @PathVariable Long idComment) {
+        postService.updateComment(idComment, commentContent);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/posts/{idPost}/comments/{idComment}")
+    public ResponseEntity<?> deleteComment(@PathVariable Long idComment) {
+        postService.deleteComment(idComment);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/posts/comments/{idComment}")
+    public ResponseEntity<?> getCommentById(@PathVariable Long idComment) {
+        Comment comment = postService.getCommentById(idComment);
+        return new ResponseEntity<>(comment, HttpStatus.OK);
+    }
+
 
     @ExceptionHandler(PostNotFoundException.class)
     public final ResponseEntity<ErrorResponse> handlePostNotFoundException(PostNotFoundException ex, WebRequest request) {

@@ -36,18 +36,31 @@ public class Post {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
+    @Column(name = "etiquetas")
+    private String etiquetas;
+
+    public String getEtiquetas() {
+        return etiquetas;
+    }
+
+    public void setEtiquetas(String etiquetas) {
+        this.etiquetas = etiquetas;
+    }
+
+
     public Post() {
     }
 
-    public Post(Long id, String postContent, Long postStateId, Long userId, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt) {
-        this.id = id;
+    public Post(String postContent, Long postStateId, Long userId, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, String etiquetas) {
         this.postContent = postContent;
         this.postStateId = postStateId;
         this.userId = userId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.deletedAt = deletedAt;
+        this.etiquetas = etiquetas;
     }
+
 
     public Long getId() {
         return id;

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.devlooping.api.entity.Comment;
 import com.devlooping.api.entity.Post;
 import com.devlooping.api.entity.PostSummary;
 import com.devlooping.api.exception.ForbiddenException;
@@ -28,6 +29,9 @@ public class PostDAO {
         return entityManager.createQuery("SELECT ps FROM PostSummary ps", PostSummary.class)
                 .getResultList();
     }
+
+
+    
 
     public List<PostSummary> getPostSummariesByUser(Long idUser) {
         return entityManager.createQuery("SELECT ps FROM PostSummary ps WHERE ps.user.id = :idUser", PostSummary.class)
@@ -110,4 +114,51 @@ public class PostDAO {
         post.setPostStateId(PUBLICADO);
         entityManager.merge(post);
     }
+
+    @Transactional
+    public void saveComment(Comment comment) {
+        comment.setId(0L);
+        comment.setCreatedAt(LocalDateTime.now());
+        comment.setDeletedAt(null);
+
+        entityManager.merge(comment);
+    }
+
+    public List<Comment> getCommentsByPost(Long idPost) {
+        return entityManager.createQuery("SELECT c FROM Comment c WHERE c.postId = :idPost", Comment.class)
+                .setParameter("idPost", idPost)
+                .getResultList();
+    }
+    @Transactional
+    public void deleteComment(Long idComment) {
+        Comment comment = entityManager.find(Comment.class, idComment);
+        if (comment == null) {
+            throw new PostNotFoundException("Comment not found with id: " + idComment);
+        }
+        comment.setDeletedAt(LocalDateTime.now());
+        entityManager.merge(comment);
+    }
+    @Transactional
+    public void updateComment(Long idComment, String commentContent) {
+        Comment comment = entityManager.find(Comment.class, idComment);
+        if (comment == null) {
+            throw new PostNotFoundException("Comment not found with id: " + idComment);
+        }
+        comment.setContent(commentContent);
+        entityManager.merge(comment);
+    }
+
+    public Comment getCommentById(Long idComment) {
+        Comment comment = entityManager.find(Comment.class, idComment);
+        if (comment == null) {
+            throw new PostNotFoundException("Comment not found with id: " + idComment);
+        }
+        return comment;
+    }   
+
+
+
+
+
+
 }

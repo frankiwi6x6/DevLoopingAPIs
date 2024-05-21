@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import com.devlooping.api.dao.PostDAO;
+import com.devlooping.api.entity.Comment;
 import com.devlooping.api.entity.Post;
 import com.devlooping.api.entity.PostSummary;
 
@@ -55,5 +56,30 @@ public class PostService {
     public void hidePost(Long idPost) {
         postDAO.hidePost(idPost);
     }
+
+    public void saveComment(Comment comment) {
+        postDAO.saveComment(comment);
+    }
+
+    public void deleteComment(Long idComment) {
+        postDAO.deleteComment(idComment);
+    }
+
+    public void updateComment(Long idComment, String commentContent) {
+        postDAO.updateComment(idComment, commentContent);
+    }
+
+    public List<Comment> getCommentsByPost(Long idPost) {
+        return postDAO.getCommentsByPost(idPost);
+    }
+
+    public Comment getCommentById(Long idComment) {
+        return postDAO.getCommentById(idComment);
+    }
+
+    
+
+
+
 
 }
