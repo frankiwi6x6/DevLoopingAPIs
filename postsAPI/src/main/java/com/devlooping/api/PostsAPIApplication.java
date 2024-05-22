@@ -18,9 +18,9 @@ public class PostsAPIApplication {
 	@Bean
 	public OpenAPI customOpenAPI(){
 		return new OpenAPI().info(new io.swagger.v3.oas.models.info.Info()
-		.title("Devlooping | API de Usuarios")
+		.title("Devlooping | API de Post")
 		.version("1.0")
-		.description("Documentación para la API de gestión de usuarios de Devlooping"));
+		.description("Documentación para la API de gestión de publicaciones de Devlooping"));
 	}
 
 	@Bean
