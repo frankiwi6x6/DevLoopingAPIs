@@ -46,13 +46,22 @@ public class PostSummary {
     @Column(name = "comments_count")
     private Long commentsCount;
 
+    @Column(name = "etiquetas")
+    private String etiquetas;
+
+    public String getEtiquetas() {
+        return etiquetas;
+    }
+
+    public void setEtiquetas(String etiquetas) {
+        this.etiquetas = etiquetas;
+    }
+
+
     public PostSummary() {
     }
 
-    
-
-    public PostSummary(Long postId, PostState postState, User user, String postContent, LocalDateTime createdAt,
-            LocalDateTime updatedAt, LocalDateTime deletedAt, Long likesCount, Long sharesCount, Long commentsCount) {
+    public PostSummary(Long postId, PostState postState, User user, String postContent, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, Long likesCount, Long sharesCount, Long commentsCount, String etiquetas) {
         this.postId = postId;
         this.postState = postState;
         this.user = user;
@@ -63,10 +72,9 @@ public class PostSummary {
         this.likesCount = likesCount;
         this.sharesCount = sharesCount;
         this.commentsCount = commentsCount;
+        this.etiquetas = etiquetas;
     }
-
-
-
+    
     public Long getPostId() {
         return postId;
     }

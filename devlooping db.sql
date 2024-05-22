@@ -125,7 +125,6 @@ CREATE TABLE POST_STATE(
 
 
  -- Definición de tabla POST (depende de USER)
-
 CREATE TABLE POST (
     id_post INTEGER PRIMARY KEY AUTO_INCREMENT,
     post_content longtext not null,
@@ -134,6 +133,7 @@ CREATE TABLE POST (
     updated_at datetime,
     deleted_at  datetime,
     USER_id_user INTEGER NOT NULL,
+    etiquetas varchar(500) NOT NULL,
     CONSTRAINT POST_USER_FK FOREIGN KEY (USER_id_user) REFERENCES `USER`(id_user) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT POST_STATE_FK FOREIGN KEY (post_state_id) REFERENCES `POST_STATE`(id_post_state) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -165,23 +165,32 @@ CREATE TABLE USER_POST_SHARES (
     CONSTRAINT SHARES_USER_FK FOREIGN KEY (USER_id_user) REFERENCES USER(id_user) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT SHARES_POST_FK FOREIGN KEY (POST_id_post) REFERENCES POST(id_post) ON DELETE CASCADE ON UPDATE CASCADE
     );
-    
+DROP VIEW post_summary_view;
 CREATE VIEW post_summary_view AS
 SELECT p.id_post AS id_post, 
            ps.id_post_state AS id_post_state, 
-           ps.state_name AS state_name, 
            u.id_user AS user_id, 
-           u.username AS username, 
-           u.profile_pic_url AS profile_pic_url, 
            p.post_content AS post_content, 
            p.created_at AS created_at, 
            p.updated_at AS updated_at,
            p.deleted_at AS deleted_at, 
+           p.etiquetas AS etiquetas,
            (SELECT COUNT(post_id_post) FROM user_post_likes l WHERE l.post_id_post = p.id_post) AS likes_count, 
            (SELECT COUNT(post_id_post) FROM comment c WHERE c.post_id_post = p.id_post) AS comments_count, 
            (SELECT COUNT(post_id_post) FROM user_post_shares s WHERE s.post_id_post= p.id_post) AS shares_count 
     FROM Post p 
     JOIN post_state ps ON p.post_state_id = ps.id_post_state
     JOIN User u ON p.USER_id_user = u.id_user;
-    
 
+DROP VIEW IF EXISTS comment_summary_view;
+CREATE VIEW comment_summary_view AS;
+ SELECT 	c.id_comment as id_comment,
+		c.comment_content as comment_content,
+        c.post_state_id as post_state_id,
+        c.created_at as created_at,
+        c.deleted_at as deleted_at,
+        u.id_user AS user_id,
+        p.id_post AS post_id
+FROM COMMENT c
+JOIN User u ON c.USER_id_user = u.id_user
+JOIN post p ON c.POST_id_post = p.id_post;
