@@ -1274,7 +1274,7 @@ INSERT INTO ARCHIEVEMENT_USER (USER_id_user, ACHIEVEMENT_id_achievement, created
     (1, 3, '2023-01-01'), (2, 3, '2023-02-01'), (3, 3, '2023-03-01');
 
 
-INSERT INTO POST_STATE (state_name) VALUES ('Borrador');
 INSERT INTO POST_STATE (state_name) VALUES ('Publicado');
-INSERT INTO POST_STATE (state_name) VALUES ('Eliminado');
+INSERT INTO POST_STATE (state_name) VALUES ('Oculto');
+INSERT INTO POST_STATE (state_name) VALUES ('Desactivado');
 
