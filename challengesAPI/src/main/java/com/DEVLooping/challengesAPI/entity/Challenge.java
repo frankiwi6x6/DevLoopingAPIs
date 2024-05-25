@@ -1,8 +1,15 @@
 package com.DEVLooping.challengesAPI.entity;
 
-import java.util.List;
-
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "challenge")
@@ -32,22 +39,22 @@ public class Challenge {
     @JoinColumn(name = "CHALLENGE_TYPE_id_type")
     private ChallengeType challengeType;
 
+    @OneToOne
+    @JoinColumn(name = "CATEGORY_ID")
+    private Category category;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "DIFFICULTY_id_difficulty")
     private Difficulty difficulty;
     
-    @OneToMany(mappedBy = "challenge", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<ExpectedOutput> expectedOutputs;
-
 
     public Challenge() {
     }
 
     
 
-
     public Challenge(int id, String title, String desc_challenge, String content, String start_at, String end_at,
-            ChallengeType challengeType, Difficulty difficulty, List<ExpectedOutput> expectedOutputs) {
+            ChallengeType challengeType, Category category, Difficulty difficulty) {
         this.id = id;
         this.title = title;
         this.desc_challenge = desc_challenge;
@@ -55,10 +62,9 @@ public class Challenge {
         this.start_at = start_at;
         this.end_at = end_at;
         this.challengeType = challengeType;
+        this.category = category;
         this.difficulty = difficulty;
-        this.expectedOutputs = expectedOutputs;
     }
-
 
 
 
@@ -128,16 +134,15 @@ public class Challenge {
 
 
 
-
-    public List<ExpectedOutput> getExpectedOutputs() {
-        return expectedOutputs;
+    public Category getCategory() {
+        return category;
     }
 
 
 
-
-    public void setExpectedOutputs(List<ExpectedOutput> expectedOutputs) {
-        this.expectedOutputs = expectedOutputs;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
+    
 }
