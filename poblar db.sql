@@ -28,26 +28,20 @@ INSERT INTO DIFFICULTY (desc_difficulty) VALUES
     ('Experto'),
     ('Prueba técnica');
 
--- Insertar datos en la tabla USER
-INSERT INTO `USER` (username, email, password_hashed, created_at, user_type_id, status, bio) VALUES
-    ('admin', 'admin@example.com', 'YWRtaW4xMjM=', '2022-01-01', 1, 'active', null);
-
 -- Insertar datos en la tabla CHALLENGE_TYPE
 INSERT INTO CHALLENGE_TYPE (desc_type) VALUES
     ('Desafío'),
     ('Lección');
-
--- Insertar datos en la tabla CHALLENGE_CATEGORY
-INSERT INTO CHALLENGE_CATEGORY (category_name, category_description) VALUES 
-('Consola', 'Retos que involucran en uso de consola'),
-('Funciones', 'Retos que involucran la creación de funciones');
 
 -- Insertar datos en la tabla ANSWER_STATUS
 INSERT INTO ANSWER_STATUS (status_name, status_desc) VALUES
     ('Borrador', 'La respuesta se ha guardado como borrador y aún no ha sido enviada.'),
     ('Enviado', 'La respuesta ha sido enviada.');
 
-    
+-- Insertar datos en la tabla CHALLENGE_CATEGORY
+INSERT INTO CHALLENGE_CATEGORY (category_name, category_description) VALUES 
+('Consola', 'Retos que involucran en uso de consola'),
+('Funciones', 'Retos que involucran la creación de funciones');
 
 -- Insertar datos en la tabla CHALLENGE
 INSERT INTO CHALLENGE (title, desc_challenge, content, DIFFICULTY_id_difficulty, CHALLENGE_TYPE_id_type, start_at, end_at, CATEGORY_ID) VALUES
@@ -140,6 +134,18 @@ INSERT INTO CHALLENGE_TESTS (CHALLENGE_ID, TEST_ID) VALUES
     (4, 4),
     (5, 5),
     (6, 6);
+
+-- Insertar datos en la tabla USER
+INSERT INTO `USER` (username, email, password_hashed, created_at, user_type_id, status, bio) VALUES
+    ('admin', 'admin@example.com', 'YWRtaW4xMjM=', '2022-01-01', 1, 'active', null);
+
+-- Insertar datos en la tabla PERMISSION_USER
+INSERT INTO PERMISSION_USER (PERMISSION_id_permission, USER_id_user) VALUES
+    (1, 1); -- El admin tiene permiso de gestionar usuarios
+
+
+
+
 
 INSERT INTO POST_STATE (state_name) VALUES ('Privado');
 INSERT INTO POST_STATE (state_name) VALUES ('Publico');
