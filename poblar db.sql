@@ -28,6 +28,10 @@ INSERT INTO DIFFICULTY (desc_difficulty) VALUES
     ('Experto'),
     ('Prueba técnica');
 
+-- Insertar datos en la tabla USER
+INSERT INTO `USER` (username, email, password_hashed, created_at, user_type_id, status, bio) VALUES
+    ('admin', 'admin@example.com', 'YWRtaW4xMjM=', '2022-01-01', 1, 'active', null);
+
 -- Insertar datos en la tabla CHALLENGE_TYPE
 INSERT INTO CHALLENGE_TYPE (desc_type) VALUES
     ('Desafío'),
@@ -46,7 +50,7 @@ INSERT INTO ANSWER_STATUS (status_name, status_desc) VALUES
     
 
 -- Insertar datos en la tabla CHALLENGE
-INSERT INTO CHALLENGE (title, desc_challenge, content, DIFFICULTY_id_difficulty, CHALLENGE_TYPE_id_type, start_at, end_at, CHALLENGE_CATEGORY_ID) VALUES
+INSERT INTO CHALLENGE (title, desc_challenge, content, DIFFICULTY_id_difficulty, CHALLENGE_TYPE_id_type, start_at, end_at, CATEGORY_ID) VALUES
     ('¡Tu primer "Hola Mundo" en JS!', 'Debes lograr que la consola imprima "Hola Mundo"', NULL, 1, 1, '2023-05-01', NULL, 1),
     ('¡Sumar dos números!', 'Tu tarea es crear una función que ingrese dos parámetros y los sume', NULL, 2, 1, '2023-06-01', NULL, 2),
     ('Convertir grados Celsius a Fahrenheit', 'Crear una función que convierta grados Celsius a Fahrenheit', NULL, 2, 1, '2023-06-15', NULL,2),
@@ -136,3 +140,6 @@ INSERT INTO CHALLENGE_TESTS (CHALLENGE_ID, TEST_ID) VALUES
     (4, 4),
     (5, 5),
     (6, 6);
+
+INSERT INTO POST_STATE (state_name) VALUES ('Privado');
+INSERT INTO POST_STATE (state_name) VALUES ('Publico');
