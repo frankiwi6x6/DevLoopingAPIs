@@ -22,9 +22,8 @@ public class PostDAO {
     @PersistenceContext
     private EntityManager entityManager;
 
-    Long PUBLICADO = 1L;
-    Long OCULTO = 2L;
-    Long ELIMINADO = 3L;
+    Long PRIVADO = 1L;
+    Long PUBLICO = 2L;
 
     public List<PostSummary> getAllPostSummaries() {
         return entityManager.createQuery("SELECT ps FROM PostSummary ps", PostSummary.class)
@@ -38,15 +37,15 @@ public class PostDAO {
     }
 
     public List<PostSummary> getAllPublishedPostSummaries() {
-        return entityManager.createQuery("SELECT ps FROM PostSummary ps WHERE ps.postState.id = :PUBLICADO", PostSummary.class)
-                .setParameter("PUBLICADO", PUBLICADO)
+        return entityManager.createQuery("SELECT ps FROM PostSummary ps WHERE ps.postState.id = :PUBLICO", PostSummary.class)
+                .setParameter("PUBLICO", PUBLICO)
                 .getResultList();
     }
 
     public List<PostSummary> getPublishedPostSummariesByUser(Long idUser) {
-        return entityManager.createQuery("SELECT ps FROM PostSummary ps WHERE ps.user.id = :idUser AND ps.postState.id = :PUBLICADO", PostSummary.class)
+        return entityManager.createQuery("SELECT ps FROM PostSummary ps WHERE ps.user.id = :idUser AND ps.postState.id = :PUBLICO", PostSummary.class)
                 .setParameter("idUser", idUser)
-                .setParameter("PUBLICADO", PUBLICADO)
+                .setParameter("PUBLICO", PUBLICO)
                 .getResultList();
     }
 
@@ -88,9 +87,7 @@ public class PostDAO {
         if (post == null) {
             throw new PostNotFoundException("Post not found with id: " + idPost);
         }
-        post.setDeletedAt(LocalDateTime.now());
-        post.setPostStateId(ELIMINADO);
-        entityManager.merge(post);
+        entityManager.remove(post);
     }
 
     @Transactional
@@ -99,7 +96,7 @@ public class PostDAO {
         if (post == null) {
             throw new PostNotFoundException("Post not found with id: " + idPost);
         }
-        post.setPostStateId(OCULTO);
+        post.setPostStateId(PRIVADO);
         entityManager.merge(post);
     }
 
@@ -109,7 +106,7 @@ public class PostDAO {
         if (post == null) {
             throw new PostNotFoundException("Post not found with id: " + idPost);
         }
-        post.setPostStateId(PUBLICADO);
+        post.setPostStateId(PUBLICO);
         entityManager.merge(post);
     }
 
