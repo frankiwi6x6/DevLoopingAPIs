@@ -66,15 +66,12 @@ public class ChallengeSummary {
     @OneToMany
     @JoinColumn(name = "test_id")
     private List<Outputs> outputs;
-    @OneToMany
-    @JoinColumn(name = "challenge_tip_id")
-    private List<Tip> tips;
     public ChallengeSummary() {
     }
 
     public ChallengeSummary(int id, String title, String description, String content, String start_at, String end_at,
             Category category, Difficulty difficulty, ChallengeType challengeType, List<Inputs> inputs,
-            List<Outputs> outputs, List<Tip> tips) {
+            List<Outputs> outputs) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -86,7 +83,6 @@ public class ChallengeSummary {
         this.challengeType = challengeType;
         this.inputs = inputs;
         this.outputs = outputs;
-        this.tips = tips;
     }   
 
     public int getId() {
@@ -169,13 +165,7 @@ public class ChallengeSummary {
         this.outputs = outputs;
     }
 
-    public List<Tip> getTips() {
-        return tips;
-    }
-
-    public void setTips(List<Tip> tips) {
-        this.tips = tips;
-    }
+    
 
     public Category getCategory() {
         return category;
@@ -190,6 +180,6 @@ public class ChallengeSummary {
         return "ChallengeSummary [category=" + category + ", challengeType=" + challengeType + ", content=" + content
                 + ", description=" + description + ", difficulty=" + difficulty + ", end_at=" + end_at + ", id=" + id
                 + ", inputs=" + inputs + ", outputs=" + outputs + ", start_at=" + start_at + ", title=" + title
-                + ", tips=" + tips + "]";
+                + "]";
     }
 }

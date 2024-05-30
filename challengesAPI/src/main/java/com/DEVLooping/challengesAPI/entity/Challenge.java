@@ -34,6 +34,8 @@ public class Challenge {
 
     @Column(name = "end_at")
     private String end_at;
+    @Column(name = "tips")
+    private String tips;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CHALLENGE_TYPE_id_type")
@@ -53,18 +55,21 @@ public class Challenge {
 
     
 
+
     public Challenge(int id, String title, String desc_challenge, String content, String start_at, String end_at,
-            ChallengeType challengeType, Category category, Difficulty difficulty) {
+            String tips, ChallengeType challengeType, Category category, Difficulty difficulty) {
         this.id = id;
         this.title = title;
         this.desc_challenge = desc_challenge;
         this.content = content;
         this.start_at = start_at;
         this.end_at = end_at;
+        this.tips = tips;
         this.challengeType = challengeType;
         this.category = category;
         this.difficulty = difficulty;
     }
+
 
 
 
@@ -142,6 +147,20 @@ public class Challenge {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+
+
+
+    public String getTips() {
+        return tips;
+    }
+
+
+
+
+    public void setTips(String tips) {
+        this.tips = tips;
     }
 
     

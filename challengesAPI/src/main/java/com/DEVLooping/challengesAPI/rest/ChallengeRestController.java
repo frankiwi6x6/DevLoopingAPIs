@@ -1,14 +1,22 @@
 package com.DEVLooping.challengesAPI.rest;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.DEVLooping.challengesAPI.entity.Challenge;
 import com.DEVLooping.challengesAPI.entity.ErrorResponse;
 import com.DEVLooping.challengesAPI.service.ChallengeService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -68,21 +76,6 @@ public class ChallengeRestController {
         theChallenge.setId(0);
         challengeService.save(theChallenge);
         return ResponseEntity.status(HttpStatus.CREATED).body(theChallenge);
-    }
-
-    @PutMapping("/challenges/{challengeId}")
-    public ResponseEntity<?> updateChallenge(@RequestBody Challenge theChallenge, @PathVariable int challengeId) {
-        Challenge tempChallenge = challengeService.findById(challengeId);
-        if (tempChallenge == null) {
-            return ResponseEntity.status(
-                    HttpStatus.NOT_FOUND).body(
-                            new ErrorResponse(HttpStatus.NOT_FOUND.value(),
-                                    HttpStatus.NOT_FOUND.getReasonPhrase(),
-                                    "No challenges found with id " + challengeId));
-        }
-        theChallenge.setId(challengeId);
-        challengeService.save(theChallenge);
-        return ResponseEntity.ok(theChallenge);
     }
 
     @DeleteMapping("/challenges/{challengeId}")

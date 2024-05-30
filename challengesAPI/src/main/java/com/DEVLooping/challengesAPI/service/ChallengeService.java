@@ -3,6 +3,7 @@ package com.DEVLooping.challengesAPI.service;
 import java.util.List;
 
 import com.DEVLooping.challengesAPI.entity.Challenge;
+import com.DEVLooping.challengesAPI.entity.ChallengeRequest;
 
 public interface ChallengeService {
 
@@ -16,5 +17,6 @@ public interface ChallengeService {
 
     void deleteById(int theId);
 
+    void createChallenge(ChallengeRequest request);
 
 }
