@@ -16,14 +16,16 @@ import jakarta.persistence.Table;
 public class ChallengeSummary {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "challenge_id")
     private int id;
     @Column(name = "title")
     private String title;
-    @Column(name = "description")
+    @Column(name = "desc_challenge")
     private String description;
     @Column(name = "content")
     private String content;
+    @Column(name = "default_value")
+    private String default_value;
     @Column(name = "start_at")
     private String start_at;
     @Column(name = "end_at")
@@ -32,10 +34,10 @@ public class ChallengeSummary {
     @JoinColumn(name = "category_id")
     private Category category;
     @OneToOne
-    @JoinColumn(name = "id_difficulty")
+    @JoinColumn(name = "DIFFICULTY_id_difficulty")
     private Difficulty difficulty;
     @OneToOne
-    @JoinColumn(name = "id_type")
+    @JoinColumn(name = "CHALLENGE_TYPE_id_type")
     private ChallengeType challengeType;
     @OneToMany
     @JoinColumn(name = "test_id")
@@ -158,5 +160,13 @@ public class ChallengeSummary {
                 + ", description=" + description + ", difficulty=" + difficulty + ", end_at=" + end_at + ", id=" + id
                 + ", inputs=" + inputs + ", outputs=" + outputs + ", start_at=" + start_at + ", title=" + title
                 + "]";
+    }
+
+    public String getDefault_value() {
+        return default_value;
+    }
+
+    public void setDefault_value(String default_value) {
+        this.default_value = default_value;
     }
 }

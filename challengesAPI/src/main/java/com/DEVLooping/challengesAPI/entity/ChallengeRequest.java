@@ -2,6 +2,7 @@ package com.DEVLooping.challengesAPI.entity;
 
 import java.util.Date;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +24,8 @@ public class ChallengeRequest {
     private Integer type_id;
     private Date start_at;
     private Date end_at;
+    @Column(name = "default_value")
+    private String defaultValue;
 
     public ChallengeRequest() {
     }
@@ -109,6 +112,14 @@ public class ChallengeRequest {
 
     public void setEnd_at(Date end_at) {
         this.end_at = end_at;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
     }
 
 }

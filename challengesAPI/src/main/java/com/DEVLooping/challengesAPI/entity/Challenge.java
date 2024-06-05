@@ -29,6 +29,9 @@ public class Challenge {
     @Column(name = "content")
     private String content;
 
+    @Column(name = "default_value")
+    private String defaultValue;
+
     @Column(name = "start_at")
     private String start_at;
 
@@ -133,19 +136,24 @@ public class Challenge {
     public void setChallengeType(ChallengeType challengeType) {
         this.challengeType = challengeType;
     }
-
-
-
     public Category getCategory() {
         return category;
     }
-
-
-
     public void setCategory(Category category) {
         this.category = category;
     }
+    public String getDefaultValue() {
+        return defaultValue;
+    }
 
+
+
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
     
+
+
     
 }

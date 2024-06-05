@@ -86,6 +86,7 @@ CREATE TABLE CHALLENGE (
     title VARCHAR(255) NOT NULL,
     desc_challenge VARCHAR(255) NOT NULL,
     content mediumtext NULL ,
+    default_value VARCHAR(255) NULL,
     CATEGORY_ID INTEGER NOT NULL,
     DIFFICULTY_id_difficulty  INTEGER, 
     CHALLENGE_TYPE_id_type INTEGER ,
@@ -267,13 +268,14 @@ JOIN post p ON c.POST_id_post = p.id_post;
 DROP VIEW IF EXISTS CHALLENGE_DETAIL_VIEW;
 CREATE VIEW challenge_detail_view as
 SELECT
-    c.id_challenge AS id,
+    c.id_challenge AS challenge_id,
     c.title,
-    c.desc_challenge description,
+    c.desc_challenge,
     c.content,
+    c.default_value,
     c.CATEGORY_ID,
-    c.DIFFICULTY_id_difficulty as id_difficulty ,
-    c.CHALLENGE_TYPE_id_type as id_type,
+    c.DIFFICULTY_id_difficulty,
+    c.CHALLENGE_TYPE_id_type,
     c.start_at,
     c.end_at,
     JSON_ARRAYAGG(

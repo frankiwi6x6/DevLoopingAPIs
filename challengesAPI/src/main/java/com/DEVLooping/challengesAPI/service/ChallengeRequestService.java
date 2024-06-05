@@ -27,6 +27,7 @@ public class ChallengeRequestService {
                 request.getTitle(),
                 request.getDescChallenge(),
                 request.getContent(),
+                request.getDefaultValue(),
                 request.getCategoryId(),
                 request.getDifficultyId(),
                 request.getTypeId(),

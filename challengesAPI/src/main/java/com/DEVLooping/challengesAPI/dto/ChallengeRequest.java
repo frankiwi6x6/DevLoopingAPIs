@@ -12,6 +12,7 @@ public class ChallengeRequest {
     private Integer typeId;
     private Date startAt;
     private Date endAt;
+    private String defaultValue;
     private List<String> tipTitles;
     private List<String> tipDescs;
     private String testDescription;
@@ -124,6 +125,15 @@ public class ChallengeRequest {
     public void setOutputValues(List<String> outputValues) {
         this.outputValues = outputValues;
     }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
 
     
 }
