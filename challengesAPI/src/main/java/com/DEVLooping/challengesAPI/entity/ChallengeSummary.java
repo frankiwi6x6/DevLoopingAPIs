@@ -10,29 +10,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
-/*
- CREATE VIEW challenge_detail_view as
-SELECT 
-    c.id_challenge as id,
-    c.title as title,
-    c.desc_challenge as description,
-    c.content as content,
-    c.start_at,
-    c.end_at,
-    c.CATEGORY_ID as category_id,
-    d.id_difficulty,
-    CTY.id_type,
-    CT.TEST_ID ,
-    TIP.CHALLENGE_TIP_ID as id_tip
-FROM CHALLENGE C
-JOIN CHALLENGE_TIP TIP ON TIP.CHALLENGE_ID = C.ID_CHALLENGE
-JOIN CHALLENGE_TESTS CT ON CT.CHALLENGE_ID = C.ID_CHALLENGE
-JOIN DIFFICULTY D ON C.DIFFICULTY_id_difficulty = D.id_difficulty
-JOIN CHALLENGE_TYPE CTY ON C.CHALLENGE_TYPE_id_type = CTY.id_type
-JOIN TEST T ON CT.TEST_ID = T.ID_TEST;
-
-
- */
 
 @Entity
 @Table(name = "challenge_detail_view")

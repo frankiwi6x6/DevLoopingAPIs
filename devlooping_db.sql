@@ -267,13 +267,13 @@ JOIN post p ON c.POST_id_post = p.id_post;
 DROP VIEW IF EXISTS CHALLENGE_DETAIL_VIEW;
 CREATE VIEW challenge_detail_view as
 SELECT
-    c.id_challenge AS challenge_id,
+    c.id_challenge AS id,
     c.title,
-    c.desc_challenge,
+    c.desc_challenge description,
     c.content,
     c.CATEGORY_ID,
-    c.DIFFICULTY_id_difficulty,
-    c.CHALLENGE_TYPE_id_type,
+    c.DIFFICULTY_id_difficulty as id_difficulty ,
+    c.CHALLENGE_TYPE_id_type as id_type,
     c.start_at,
     c.end_at,
     JSON_ARRAYAGG(
