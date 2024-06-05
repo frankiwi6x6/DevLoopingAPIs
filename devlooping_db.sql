@@ -19,7 +19,6 @@ DROP TABLE IF EXISTS USER;
 DROP TABLE IF EXISTS USER_TYPE;
 DROP TABLE IF EXISTS EXPECTED_OUTPUT;
 DROP TABLE IF EXISTS TIP;
-DROP TABLE IF EXISTS CHALLENGE_TIP;
 DROP TABLE IF EXISTS CHALLENGE_TESTS;
 DROP TABLE IF EXISTS INPUT;   
 DROP TABLE IF EXISTS OUTPUT;
@@ -92,12 +91,19 @@ CREATE TABLE CHALLENGE (
     CHALLENGE_TYPE_id_type INTEGER ,
     start_at DATE NOT NULL,
     end_at DATE,
-    tips TEXT NOT NULL,
     CONSTRAINT CHALLENGE_DIFFICULTY_FK FOREIGN KEY (DIFFICULTY_id_difficulty) REFERENCES DIFFICULTY(id_difficulty) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT CHALLENGE_CATEGORY_FK FOREIGN KEY (CATEGORY_ID) REFERENCES CHALLENGE_CATEGORY(id_category) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT CHALLENGE_C_TYPE_FK FOREIGN KEY (CHALLENGE_TYPE_id_type) REFERENCES CHALLENGE_TYPE(id_type) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+
+CREATE TABLE TIP (
+    ID_TIP INTEGER PRIMARY KEY AUTO_INCREMENT,
+    TIP_TITLE VARCHAR(255) NOT NULL,
+    TIP_DESC TEXT NOT NULL,
+    CHALLENGE_id_challenge INTEGER NOT NULL,
+    CONSTRAINT CHALLENGE_ID_FK FOREIGN KEY (CHALLENGE_id_challenge) REFERENCES CHALLENGE(id_challenge) ON DELETE CASCADE ON UPDATE CASCADE
+);
 
 
 CREATE TABLE TEST(
@@ -260,20 +266,37 @@ JOIN post p ON c.POST_id_post = p.id_post;
 
 DROP VIEW IF EXISTS CHALLENGE_DETAIL_VIEW;
 CREATE VIEW challenge_detail_view as
-SELECT 
-    c.id_challenge as id,
-    c.title as title,
-    c.desc_challenge as description,
-    c.content as content,
+SELECT
+    c.id_challenge AS challenge_id,
+    c.title,
+    c.desc_challenge,
+    c.content,
+    c.CATEGORY_ID,
+    c.DIFFICULTY_id_difficulty,
+    c.CHALLENGE_TYPE_id_type,
     c.start_at,
     c.end_at,
-    c.CATEGORY_ID as category_id,
-    d.id_difficulty,
-    CTY.id_type,
-    CT.TEST_ID 
-FROM CHALLENGE C
-JOIN CHALLENGE_TESTS CT ON CT.CHALLENGE_ID = C.ID_CHALLENGE
-JOIN DIFFICULTY D ON C.DIFFICULTY_id_difficulty = D.id_difficulty
-JOIN CHALLENGE_TYPE CTY ON C.CHALLENGE_TYPE_id_type = CTY.id_type
-JOIN TEST T ON CT.TEST_ID = T.ID_TEST;
-
+    JSON_ARRAYAGG(
+        JSON_OBJECT('tip_title', t.TIP_TITLE, 'tip_desc', t.TIP_DESC)
+    ) AS tips,
+    test.test_description,
+    JSON_ARRAYAGG(
+        JSON_OBJECT('input_value', i.INPUT_VALUE)
+    ) AS input_values,
+    JSON_ARRAYAGG(
+        JSON_OBJECT('output_value', o.OUTPUT_VALUE)
+    ) AS output_values
+FROM
+    CHALLENGE AS c
+LEFT JOIN
+    TIP AS t ON c.id_challenge = t.CHALLENGE_id_challenge
+LEFT JOIN
+    CHALLENGE_TESTS AS ct ON c.id_challenge = ct.CHALLENGE_ID
+LEFT JOIN
+    TEST AS test ON ct.TEST_ID = test.id_test
+LEFT JOIN
+    INPUT AS i ON test.id_test = i.TEST_ID
+LEFT JOIN
+    OUTPUT AS o ON test.id_test = o.TEST_ID
+GROUP BY
+    c.id_challenge, c.title, c.desc_challenge, c.content, c.CATEGORY_ID, c.DIFFICULTY_id_difficulty, c.CHALLENGE_TYPE_id_type, c.start_at, c.end_at, test.test_description;

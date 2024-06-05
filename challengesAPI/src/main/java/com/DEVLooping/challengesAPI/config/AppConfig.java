@@ -38,4 +38,7 @@ public class AppConfig {
     public GenericDAO<Test> testDAO() {
         return new GenericDAOImpl<>();
     }
+
+
+
 }

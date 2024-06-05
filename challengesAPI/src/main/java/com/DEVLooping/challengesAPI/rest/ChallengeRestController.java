@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.DEVLooping.challengesAPI.dto.ChallengeRequest;
 import com.DEVLooping.challengesAPI.entity.Challenge;
 import com.DEVLooping.challengesAPI.entity.ErrorResponse;
+import com.DEVLooping.challengesAPI.service.ChallengeRequestService;
 import com.DEVLooping.challengesAPI.service.ChallengeService;
 
 @RestController
@@ -23,11 +25,12 @@ import com.DEVLooping.challengesAPI.service.ChallengeService;
 public class ChallengeRestController {
 
     ErrorResponse errorResponse;
-
+    private ChallengeRequestService crService;
     private ChallengeService challengeService;
 
-    public ChallengeRestController(ChallengeService theChallengeService) {
+    public ChallengeRestController(ChallengeService theChallengeService, ChallengeRequestService theCrService) {
         challengeService = theChallengeService;
+        crService = theCrService;
     }
 
     @GetMapping("/challenges")
@@ -71,13 +74,6 @@ public class ChallengeRestController {
         return ResponseEntity.ok(theChallenges);
     }
 
-    @PostMapping("/challenges")
-    public ResponseEntity<Challenge> addChallenge(@RequestBody Challenge theChallenge) {
-        theChallenge.setId(0);
-        challengeService.save(theChallenge);
-        return ResponseEntity.status(HttpStatus.CREATED).body(theChallenge);
-    }
-
     @DeleteMapping("/challenges/{challengeId}")
     public ResponseEntity<?> deleteChallenge(@PathVariable int challengeId) {
         Challenge tempChallenge = challengeService.findById(challengeId);
@@ -92,8 +88,20 @@ public class ChallengeRestController {
         return ResponseEntity.ok("Deleted challenge id - " + challengeId);
     }
 
+    @PostMapping("/challenges")
+    public void saveChallenge(@RequestBody ChallengeRequest request) {
+        try {
+            crService.saveChallenge(request);
+        } catch (Exception e) {
+            // Manejo de la excepción
+            e.printStackTrace();
+            throw new RuntimeException("Error al guardar el desafío");
+        }
+    }
+
     @RestControllerAdvice
     class ChallengeRestControllerAdvice {
+
         @ExceptionHandler
         public ResponseEntity<String> handleNotFoundException(ChallengeNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
@@ -110,6 +118,7 @@ public class ChallengeRestController {
     }
 
     class ChallengeNotFoundException extends RuntimeException {
+
         public ChallengeNotFoundException(String message) {
             super(message);
         }
