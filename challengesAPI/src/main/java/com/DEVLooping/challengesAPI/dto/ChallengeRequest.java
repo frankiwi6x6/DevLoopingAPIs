@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 public class ChallengeRequest {
+
     private String title;
     private String descChallenge;
     private String content;
@@ -12,6 +13,7 @@ public class ChallengeRequest {
     private Integer typeId;
     private Date startAt;
     private Date endAt;
+    private Integer creator_id;
     private String defaultValue;
     private List<String> tipTitles;
     private List<String> tipDescs;
@@ -134,6 +136,14 @@ public class ChallengeRequest {
         this.defaultValue = defaultValue;
     }
 
+    public Integer getCreator_id() {
+        return creator_id;
+    }
 
-    
+    public void setCreator_id(Integer creator_id) {
+        this.creator_id = creator_id;
+    }
+
+
+
 }

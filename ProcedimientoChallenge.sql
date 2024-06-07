@@ -1,9 +1,11 @@
+DROP PROCEDURE IF EXISTS  SP_SaveChallenge ;
 DELIMITER //
 
 CREATE PROCEDURE SP_SaveChallenge(
     IN title VARCHAR(255), IN desc_challenge VARCHAR(255), IN content MEDIUMTEXT, IN defaultValue VARCHAR(255),
     IN category_id INTEGER, IN difficulty_id INTEGER, IN type_id INTEGER, 
     IN start_at DATE, IN end_at DATE,
+    IN creator_id INTEGER,
     IN tip_titles TEXT, IN tip_descs TEXT,  -- Arrays de títulos y descripciones de TIP
     IN test_description TEXT,
     IN input_values TEXT, IN output_values TEXT -- Arrays de INPUT y OUTPUT
@@ -20,8 +22,8 @@ BEGIN
     DECLARE output_value VARCHAR(255);
     
     -- Insertar en CHALLENGE
-    INSERT INTO CHALLENGE (title, desc_challenge, content, defaultValue,CATEGORY_ID, DIFFICULTY_id_difficulty, CHALLENGE_TYPE_id_type, start_at, end_at)
-    VALUES (title, desc_challenge, content, defaultValue, category_id, difficulty_id, type_id, start_at, end_at);
+    INSERT INTO CHALLENGE (title, desc_challenge, content, default_value,CATEGORY_ID, creator_id, DIFFICULTY_id_difficulty, CHALLENGE_TYPE_id_type, start_at, end_at)
+    VALUES (title, desc_challenge, content, defaultValue, category_id, creator_id, difficulty_id, type_id, start_at, end_at);
     SET challenge_id = LAST_INSERT_ID();
 
     -- Manejar múltiples TIPs

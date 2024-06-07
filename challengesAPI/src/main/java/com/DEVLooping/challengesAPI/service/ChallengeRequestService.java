@@ -33,6 +33,33 @@ public class ChallengeRequestService {
                 request.getTypeId(),
                 request.getStartAt(),
                 request.getEndAt(),
+                request.getCreator_id(),
+                tipTitlesJson,
+                tipDescsJson,
+                request.getTestDescription(),
+                inputValuesJson,
+                outputValuesJson
+        );
+    }
+
+    public void updateChallenge(ChallengeRequest request, int challengeId) throws JsonProcessingException {
+        String tipTitlesJson = objectMapper.writeValueAsString(request.getTipTitles());
+        String tipDescsJson = objectMapper.writeValueAsString(request.getTipDescs());
+        String inputValuesJson = objectMapper.writeValueAsString(request.getInputValues());
+        String outputValuesJson = objectMapper.writeValueAsString(request.getOutputValues());
+
+        challengeRepository.SP_UpdateChallenge(
+                challengeId,
+                request.getTitle(),
+                request.getDescChallenge(),
+                request.getContent(),
+                request.getDefaultValue(),
+                request.getCategoryId(),
+                request.getDifficultyId(),
+                request.getTypeId(),
+                request.getStartAt(),
+                request.getEndAt(),
+                request.getCreator_id(),
                 tipTitlesJson,
                 tipDescsJson,
                 request.getTestDescription(),

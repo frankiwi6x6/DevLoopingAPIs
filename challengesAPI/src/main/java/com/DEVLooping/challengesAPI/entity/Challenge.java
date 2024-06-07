@@ -38,6 +38,10 @@ public class Challenge {
     @Column(name = "end_at")
     private String end_at;
 
+    @Column(name = "creator_id")
+    private Integer creator_id;
+
+
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CHALLENGE_TYPE_id_type")
     private ChallengeType challengeType;
@@ -152,8 +156,22 @@ public class Challenge {
     public void setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
     }
-    
 
+
+
+
+    public Integer getCreator_id() {
+        return creator_id;
+    }
+
+
+
+
+    public void setCreator_id(Integer creator_id) {
+        this.creator_id = creator_id;
+    }
+
+    
 
     
 }

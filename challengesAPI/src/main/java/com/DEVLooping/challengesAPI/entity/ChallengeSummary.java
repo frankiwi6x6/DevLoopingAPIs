@@ -30,6 +30,10 @@ public class ChallengeSummary {
     private String start_at;
     @Column(name = "end_at")
     private String end_at;
+    @Column(name = "creator_id")
+    private Integer creator_id;
+    @Column(name = "tips")
+    private String tips;
     @OneToOne
     @JoinColumn(name = "category_id")
     private Category category;
@@ -48,22 +52,9 @@ public class ChallengeSummary {
     public ChallengeSummary() {
     }
 
-    public ChallengeSummary(int id, String title, String description, String content, String start_at, String end_at,
-            Category category, Difficulty difficulty, ChallengeType challengeType, List<Inputs> inputs,
-            List<Outputs> outputs) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.content = content;
-        this.start_at = start_at;
-        this.end_at = end_at;
-        this.category = category;
-        this.difficulty = difficulty;
-        this.challengeType = challengeType;
-        this.inputs = inputs;
-        this.outputs = outputs;
-    }   
+    
 
+    
     public int getId() {
         return id;
     }
@@ -168,5 +159,33 @@ public class ChallengeSummary {
 
     public void setDefault_value(String default_value) {
         this.default_value = default_value;
+    }
+
+
+
+
+    public Integer getCreator_id() {
+        return creator_id;
+    }
+
+
+
+
+    public void setCreator_id(Integer creator_id) {
+        this.creator_id = creator_id;
+    }
+
+
+
+
+    public String getTips() {
+        return tips;
+    }
+
+
+
+
+    public void setTips(String tips) {
+        this.tips = tips;
     }
 }

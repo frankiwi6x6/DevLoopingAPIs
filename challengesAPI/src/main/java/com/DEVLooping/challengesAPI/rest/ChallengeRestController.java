@@ -99,6 +99,17 @@ public class ChallengeRestController {
         }
     }
 
+    @PostMapping("/challenges/{challengeId}")
+    public void updateChallenge(@PathVariable int challengeId, @RequestBody ChallengeRequest request) {
+        try {
+            crService.updateChallenge(request, challengeId);
+        } catch (Exception e) {
+            // Manejo de la excepción
+            e.printStackTrace();
+            throw new RuntimeException("Error al actualizar el desafío");
+        }
+    }
+
     @RestControllerAdvice
     class ChallengeRestControllerAdvice {
 
