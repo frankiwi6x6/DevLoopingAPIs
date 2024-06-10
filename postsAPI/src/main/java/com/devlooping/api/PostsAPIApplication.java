@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.devlooping.api.websocket.PostHandler;
+
 import io.swagger.v3.oas.models.OpenAPI;
 @SpringBootApplication
 public class PostsAPIApplication {
@@ -21,6 +23,11 @@ public class PostsAPIApplication {
 		.title("Devlooping | API de Post")
 		.version("1.0")
 		.description("Documentación para la API de gestión de publicaciones de Devlooping"));
+	}
+
+	@Bean
+	public PostHandler postHandler(){
+		return new PostHandler();
 	}
 
 	@Bean

@@ -1,21 +1,26 @@
 package com.devlooping.api.services;
 
+import java.io.IOException;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 import com.devlooping.api.dao.PostDAO;
 import com.devlooping.api.entity.Comment;
 import com.devlooping.api.entity.CommentSummary;
 import com.devlooping.api.entity.Post;
 import com.devlooping.api.entity.PostSummary;
+import com.devlooping.api.websocket.PostHandler;
 
 @Service
 public class PostService {
 
     @Autowired
     private PostDAO postDAO;
+
+    @Autowired
+    private PostHandler postHandler;
 
     public List<PostSummary> getAllPosts() {
         return postDAO.getAllPostSummaries();
@@ -42,7 +47,6 @@ public class PostService {
     }
 
     public void updatePost(Long idPost, String postContent, Long idUser) {
-
         postDAO.updatePost(idPost, idUser, postContent);
     }
 
@@ -60,6 +64,11 @@ public class PostService {
 
     public void saveComment(Comment comment) {
         postDAO.saveComment(comment);
+        try {
+            postHandler.sendComment(comment);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void deleteComment(Long idComment) {
@@ -77,10 +86,4 @@ public class PostService {
     public CommentSummary getCommentById(Long idComment) {
         return postDAO.getCommentById(idComment);
     }
-
-    
-
-
-
-
 }

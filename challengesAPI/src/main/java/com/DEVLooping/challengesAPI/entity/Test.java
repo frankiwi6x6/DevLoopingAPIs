@@ -5,11 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-/*
-CREATE TABLE TEST(
-	ID_TEST INTEGER PRIMARY KEY AUTO_INCREMENT,
-    test_description TEXT not null);
- */
 @Entity
 @Table(name = "test")
 public class Test {

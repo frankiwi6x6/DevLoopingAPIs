@@ -10,7 +10,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
-
 @Entity
 @Table(name = "challenge_detail_view")
 public class ChallengeSummary {
@@ -49,12 +48,10 @@ public class ChallengeSummary {
     @OneToMany
     @JoinColumn(name = "test_id")
     private List<Outputs> outputs;
+
     public ChallengeSummary() {
     }
 
-    
-
-    
     public int getId() {
         return id;
     }
@@ -135,8 +132,6 @@ public class ChallengeSummary {
         this.outputs = outputs;
     }
 
-    
-
     public Category getCategory() {
         return category;
     }
@@ -161,29 +156,17 @@ public class ChallengeSummary {
         this.default_value = default_value;
     }
 
-
-
-
     public Integer getCreator_id() {
         return creator_id;
     }
-
-
-
 
     public void setCreator_id(Integer creator_id) {
         this.creator_id = creator_id;
     }
 
-
-
-
     public String getTips() {
         return tips;
     }
-
-
-
 
     public void setTips(String tips) {
         this.tips = tips;
