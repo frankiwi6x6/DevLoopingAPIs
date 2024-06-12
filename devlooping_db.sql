@@ -279,27 +279,40 @@ SELECT
     c.creator_id,
     c.start_at,
     c.end_at,
-    JSON_ARRAYAGG(
-        JSON_OBJECT('tip_title', t.TIP_TITLE, 'tip_desc', t.TIP_DESC)
+    (
+        SELECT JSON_ARRAYAGG(
+            JSON_OBJECT('tip_title', t.TIP_TITLE, 'tip_desc', t.TIP_DESC)
+        )
+        FROM TIP t
+        WHERE t.CHALLENGE_id_challenge = c.id_challenge
     ) AS tips,
-    test.test_description,
-    JSON_ARRAYAGG(
-        JSON_OBJECT('input_value', i.INPUT_VALUE)
+    test_data.test_description,
+    (
+        SELECT JSON_ARRAYAGG(
+            JSON_OBJECT('input_value', i.INPUT_VALUE)
+        )
+        FROM INPUT i
+        WHERE i.TEST_ID = test_data.id_test
     ) AS input_values,
-    JSON_ARRAYAGG(
-        JSON_OBJECT('output_value', o.OUTPUT_VALUE)
+    (
+        SELECT JSON_ARRAYAGG(
+            JSON_OBJECT('output_value', o.OUTPUT_VALUE)
+        )
+        FROM OUTPUT o
+        WHERE o.TEST_ID = test_data.id_test
     ) AS output_values
 FROM
     CHALLENGE AS c
 LEFT JOIN
-    TIP AS t ON c.id_challenge = t.CHALLENGE_id_challenge
-LEFT JOIN
-    CHALLENGE_TESTS AS ct ON c.id_challenge = ct.CHALLENGE_ID
-LEFT JOIN
-    TEST AS test ON ct.TEST_ID = test.id_test
-LEFT JOIN
-    INPUT AS i ON test.id_test = i.TEST_ID
-LEFT JOIN
-    OUTPUT AS o ON test.id_test = o.TEST_ID
+    (
+        SELECT
+            ct.CHALLENGE_ID,
+            t.id_test,
+            t.test_description
+        FROM
+            CHALLENGE_TESTS ct
+        JOIN
+            TEST t ON ct.TEST_ID = t.id_test
+    ) AS test_data ON c.id_challenge = test_data.CHALLENGE_ID
 GROUP BY
-    c.id_challenge, c.title, c.desc_challenge, c.content, c.CATEGORY_ID, c.DIFFICULTY_id_difficulty, c.CHALLENGE_TYPE_id_type, c.start_at, c.end_at, test.test_description;
+    c.id_challenge, c.title, c.desc_challenge, c.content, c.CATEGORY_ID, c.DIFFICULTY_id_difficulty, c.CHALLENGE_TYPE_id_type, c.start_at, c.end_at, test_data.test_description, test_data.id_test;
