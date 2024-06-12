@@ -57,26 +57,20 @@ public class Challenge {
 
     public Challenge() {
     }
-
-    
-
-
-    public Challenge(int id, String title, String desc_challenge, String content, String start_at, String end_at,
-            String tips, ChallengeType challengeType, Category category, Difficulty difficulty) {
+    public Challenge(int id, String title, String desc_challenge, String content, String defaultValue, String start_at,
+            String end_at, Integer creator_id, ChallengeType challengeType, Category category, Difficulty difficulty) {
         this.id = id;
         this.title = title;
         this.desc_challenge = desc_challenge;
         this.content = content;
+        this.defaultValue = defaultValue;
         this.start_at = start_at;
         this.end_at = end_at;
+        this.creator_id = creator_id;
         this.challengeType = challengeType;
         this.category = category;
         this.difficulty = difficulty;
     }
-
-
-
-
     public int getId() {
         return id;
     }
