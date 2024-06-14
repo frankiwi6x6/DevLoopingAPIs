@@ -14,11 +14,10 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Autowired
     private PostHandler postHandler;
-    
+
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(postHandler, "/post")
-        .setAllowedOrigins("*");
+        registry.addHandler(postHandler, "/ws/posts/{postId}").setAllowedOrigins("*");
     }
 
 }
