@@ -12,6 +12,7 @@ import com.devlooping.api.entity.Comment;
 import com.devlooping.api.entity.CommentSummary;
 import com.devlooping.api.entity.Post;
 import com.devlooping.api.entity.PostSummary;
+import com.devlooping.api.websocket.CommentHandler;
 import com.devlooping.api.websocket.PostHandler;
 
 @Service
@@ -22,6 +23,8 @@ public class PostService {
 
     @Autowired
     private PostHandler postHandler;
+    @Autowired
+    private CommentHandler commentHandler;
 
     public List<PostSummary> getAllPosts() {
         return postDAO.getAllPostSummaries();
@@ -45,6 +48,14 @@ public class PostService {
 
     public void savePost(Post post) {
         postDAO.savePost(post);
+        try {
+            // Obtenemos el resumen del post para enviarlo a través de WebSocket
+            PostSummary postResumen = postDAO.getPostSummaryById(post.getId());
+            postHandler.sendPost(postResumen);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void updatePost(Long idPost, String postContent, Long idUser) {
@@ -68,7 +79,7 @@ public class PostService {
         try {
             // Obtenemos el resumen del comentario para enviarlo a través de WebSocket
             CommentSummary comentario = postDAO.getCommentById(comment.getId());
-            postHandler.sendComment(comentario);
+            commentHandler.sendComment(comentario);
 
         } catch (IOException e) {
             e.printStackTrace();
