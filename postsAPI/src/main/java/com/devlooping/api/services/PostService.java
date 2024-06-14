@@ -66,7 +66,10 @@ public class PostService {
     public void saveComment(Comment comment) {
         postDAO.saveComment(comment);
         try {
-            postHandler.sendComment(comment);
+            // Obtenemos el resumen del comentario para enviarlo a través de WebSocket
+            CommentSummary comentario = postDAO.getCommentById(comment.getId());
+            postHandler.sendComment(comentario);
+
         } catch (IOException e) {
             e.printStackTrace();
         }

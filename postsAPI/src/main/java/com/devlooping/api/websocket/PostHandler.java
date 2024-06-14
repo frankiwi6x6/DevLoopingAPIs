@@ -11,7 +11,7 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import com.devlooping.api.entity.Comment;
+import com.devlooping.api.entity.CommentSummary;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -69,7 +69,7 @@ public class PostHandler implements WebSocketHandler {
         return false;
     }
 
-    public void sendComment(Comment comment) throws IOException {
+    public void sendComment(CommentSummary comment) throws IOException {
         String message = objectMapper.writeValueAsString(comment);
         List<WebSocketSession> sessions = postSessions.get(comment.getPostId());
         if (sessions != null) {
