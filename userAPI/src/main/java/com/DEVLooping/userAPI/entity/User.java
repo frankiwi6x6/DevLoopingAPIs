@@ -29,6 +29,9 @@ public class User {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "verified_at")
+    private Date verified_at;
+
     @Column(name = "deactivated_at")
     private Date deactivated_at;
 
@@ -137,6 +140,14 @@ public class User {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public Date getVerified_at() {
+        return verified_at;
+    }
+
+    public void setVerified_at(Date verified_at) {
+        this.verified_at = verified_at;
     }
 
 

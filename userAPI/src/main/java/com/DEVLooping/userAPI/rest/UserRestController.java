@@ -1,20 +1,31 @@
 package com.DEVLooping.userAPI.rest;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import com.DEVLooping.userAPI.entity.ErrorResponse;
-import com.DEVLooping.userAPI.entity.User;
-import com.DEVLooping.userAPI.entity.UserType;
-import com.DEVLooping.userAPI.service.EncryptService;
-import com.DEVLooping.userAPI.service.UserService;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.DEVLooping.userAPI.entity.ErrorResponse;
+import com.DEVLooping.userAPI.entity.User;
+import com.DEVLooping.userAPI.entity.UserType;
+import com.DEVLooping.userAPI.service.EmailService;
+import com.DEVLooping.userAPI.service.EncryptService;
+import com.DEVLooping.userAPI.service.UserService;
 
 @RestController
 @RequestMapping("/api")
@@ -22,6 +33,8 @@ public class UserRestController {
 
     private UserService userService;
     private EncryptService encryptService = new EncryptService();
+    @Autowired
+    private EmailService emailService;
 
     public UserRestController(UserService theUserService) {
         userService = theUserService;
@@ -65,7 +78,6 @@ public class UserRestController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(
                         theUser
-                
                 );
     }
 
@@ -91,6 +103,9 @@ public class UserRestController {
         return ResponseEntity.ok(theUser);
 
     }
+
+    String DOMINIO = "http://localhost:8080";
+    String URL = DOMINIO + "/api/users/confirm/";
 
     @PostMapping("/users/register")
     public ResponseEntity<?> addUser(@RequestBody User theUser) {
@@ -138,15 +153,47 @@ public class UserRestController {
         Calendar cal = Calendar.getInstance(tz);
         Date date = cal.getTime();
         theUser.setCreated_at(date);
-        theUser.setStatus("active");
+        theUser.setStatus("pending");
         theUser.setBio(null);
 
         theUser.getUserType().setId(3);
         String encryptedPassword = encryptService.encrypt(theUser.getPassword());
         theUser.setPassword(encryptedPassword);
-        User dbUser = userService.save(theUser);
 
-        return ResponseEntity.ok(dbUser);
+        //Enviar correo de confirmación
+        try {
+
+            User dbUser = userService.save(theUser);
+            emailService.sendEmail(theUser.getEmail(), "Bienvenido a DEVLooping", "Hello " + dbUser.getUsername()
+                    + ",\n\nBienvenido a DEVLooping! Estamos muy felices de que te hayas unido a nuestra plataforma. Comienza a compartir tu conocimiento con el mundo!.\n\nPara confirmar tu cuenta y comenzar a utilizar nuestra plataforma, por favor haz click en el siguiente enlace:"+ URL + dbUser.getId() + "\n\nSi no has creado una cuenta en DEVLooping, por favor ignora este mensaje.\n\nGracias por unirte a DEVLooping!\n\nA desarrollar,\nDEVLooping Team");
+
+            return ResponseEntity.ok(dbUser);
+        } catch (Exception e) {
+            System.out.println("Error sending email: " + e.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                        HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                        "Error sending email. Please try again later.",
+                        5));
+    }
+
+    // Endpoint para confirmar usuario
+    @GetMapping("/users/confirm/{userId}")
+    public ResponseEntity<?> confirmUser(@PathVariable int userId) {
+        User existingUser = userService.findById(userId);
+        if (existingUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(),
+                            HttpStatus.NOT_FOUND.getReasonPhrase(),
+                            "User not found with id: " + userId,
+                            1));
+        }
+
+        existingUser.setStatus("active");
+        existingUser.setVerified_at(new Date());
+        User savedUser = userService.save(existingUser);
+        return ResponseEntity.ok("Usuario confirmado correctamente. Puedes cerrar esta ventana.");
     }
 
     @PutMapping("/users/{userId}")
@@ -155,7 +202,7 @@ public class UserRestController {
         if (existingUser == null) {
             throw new UserNotFoundException("User not found with id: " + userId);
         }
-        
+
         existingUser.setUsername(updatedUser.getUsername());
         existingUser.setEmail(updatedUser.getEmail());
         existingUser.setPassword(updatedUser.getPassword());
@@ -166,7 +213,7 @@ public class UserRestController {
         User savedUser = userService.save(existingUser);
         return savedUser;
     }
-    
+
     @PutMapping("/users/{userId}/profile-pic")
     public User updateProfilePic(@PathVariable int userId, @RequestBody User updatedUser) {
         User existingUser = userService.findById(userId);
@@ -180,7 +227,6 @@ public class UserRestController {
         User savedUser = userService.save(existingUser);
         return savedUser;
     }
-
 
     @DeleteMapping("/users/{userId}")
     public User softDeleteUser(@PathVariable int userId) {
@@ -198,8 +244,15 @@ public class UserRestController {
         return updatedUser;
     }
 
+    @RequestMapping("/send-test-email")
+    public String sendTestEmail() {
+        emailService.sendEmail("freyes431@gmail.com", "Probando", "Es un email de prueba");
+        return "Email enviado";
+    }
+
     @RestControllerAdvice
     class UserRestControllerAdvice {
+
         @ExceptionHandler
         public ResponseEntity<String> handleNotFoundException(UserNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
@@ -216,6 +269,7 @@ public class UserRestController {
     }
 
     class UserNotFoundException extends RuntimeException {
+
         public UserNotFoundException(String message) {
             super(message);
         }
