@@ -244,12 +244,6 @@ public class UserRestController {
         return updatedUser;
     }
 
-    @RequestMapping("/send-test-email")
-    public String sendTestEmail() {
-        emailService.sendEmail("freyes431@gmail.com", "Probando", "Es un email de prueba");
-        return "Email enviado";
-    }
-
     @RestControllerAdvice
     class UserRestControllerAdvice {
 
