@@ -112,9 +112,9 @@ INSERT INTO INPUT (TEST_ID, INPUT_VALUE) VALUES
     (2, '[4, -7]'),
 
     -- Reto 3: Convertir grados Celsius a Fahrenheit
-    (3, '0'),
-    (3, '100'),
-    (3, '-40'),
+    (3, '[0]'),
+    (3, '[100]'),
+    (3, '[-40]'),
 
     -- Reto 4: Calcular el área de un triángulo
     (4, '[10, 5]'),
