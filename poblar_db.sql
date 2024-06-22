@@ -55,8 +55,9 @@ INSERT INTO CHALLENGE (title, desc_challenge, content, DIFFICULTY_id_difficulty,
     ('¡Sumar dos números!', 'Tu tarea es crear una función que ingrese dos parámetros y los sume', NULL, 2, 1, '2023-06-01', NULL, 2),
     ('Convertir grados Celsius a Fahrenheit', 'Crear una función que convierta grados Celsius a Fahrenheit', NULL, 2, 1, '2023-06-15', NULL,2),
     ('Calcular el área de un triángulo', 'Crear una función que calcule el área de un triángulo dado su base y altura', NULL, 3, 1, '2023-07-01', NULL,2),
-    ('Encontrar el número mayor', 'Crear una función que encuentre el número mayor en un array dado', NULL,  3, 1, '2023-07-15', NULL,2),
-    ('Ordenar un array', 'Crear una función que ordene un array de números de menor a mayor', NULL, 3, 1, '2023-08-01', NULL, 2);
+--    ('Encontrar el número mayor', 'Crear una función que encuentre el número mayor en un array dado', NULL,  3, 1, '2023-07-15', NULL,2),
+--    ('Ordenar un array', 'Crear una función que ordene un array de números de menor a mayor', NULL, 3, 1, '2023-08-01', NULL, 2)
+;
 
 
 -- Insertar datos en la tabla TIP
@@ -65,9 +66,10 @@ INSERT INTO TIP (TIP_TITLE, TIP_DESC, CHALLENGE_id_challenge) VALUES
     ('Tip para el reto 2', 'Revisa la sintaxis de las funciones en JavaScript', 2),
     ('Tip para el reto 3', 'Utiliza la fórmula (C * 9/5) + 32 para convertir a Fahrenheit', 3),
     ('Tip para el reto 4', 'La fórmula del área de un triángulo es (base * altura) / 2', 4),
-    ('Tip para el reto 5', 'Puedes usar el método Math.max() en JavaScript', 5),
-    ('Tip para el reto 6', 'Investiga sobre los métodos de ordenación de arrays en JavaScript', 6),
-    ('Tip 2 para el reto 6', 'Investiga sobre los métodos de ordenación de arrays en JavaScript', 6);
+--    ('Tip para el reto 5', 'Puedes usar el método Math.max() en JavaScript', 5),
+--    ('Tip para el reto 6', 'Investiga sobre los métodos de ordenación de arrays en JavaScript', 6),
+--    ('Tip 2 para el reto 6', 'Investiga sobre los métodos de ordenación de arrays en JavaScript', 6)
+;
 
 
 -- Insertar datos en la tabla TEST
@@ -76,8 +78,9 @@ INSERT INTO TEST (test_description) VALUES
     ('Prueba para el reto 2: Sumar dos números'),
     ('Prueba para el reto 3: Convertir grados Celsius a Fahrenheit'),
     ('Prueba para el reto 4: Calcular el área de un triángulo'),
-    ('Prueba para el reto 5: Encontrar el número mayor en un array'),
-    ('Prueba para el reto 6: Ordenar un array');
+--    ('Prueba para el reto 5: Encontrar el número mayor en un array'),
+--    ('Prueba para el reto 6: Ordenar un array')
+;
 
 -- Insertar datos en la tabla OUTPUT
 INSERT INTO OUTPUT (TEST_ID, OUTPUT_VALUE) VALUES
@@ -95,13 +98,13 @@ INSERT INTO OUTPUT (TEST_ID, OUTPUT_VALUE) VALUES
 
     -- Reto 4: Calcular el área de un triángulo
     (4, '25'),
-
+/*
     -- Reto 5: Encontrar el número mayor en un array
     (5, '5'),
 
     -- Reto 6: Ordenar un array
-    (6, '[1, 2, 3, 5, 8]');
-
+    (6, '[1, 2, 3, 5, 8]')
+*/;
 -- Insertar datos en la tabla INPUT
 INSERT INTO INPUT (TEST_ID, INPUT_VALUE) VALUES
     (1, 'Hola Mundo'), -- Reto 1
@@ -118,12 +121,13 @@ INSERT INTO INPUT (TEST_ID, INPUT_VALUE) VALUES
 
     -- Reto 4: Calcular el área de un triángulo
     (4, '[10, 5]'),
-
+/*
     -- Reto 5: Encontrar el número mayor en un array
     (5, '[1, 2, 3, 4, 5]'),
 
     -- Reto 6: Ordenar un array
-    (6, '[5, 3, 8, 1, 2]');
+    (6, '[5, 3, 8, 1, 2]')*/
+    ;
 
 -- Insertar datos en la tabla CHALLENGE_TESTS
 INSERT INTO CHALLENGE_TESTS (CHALLENGE_ID, TEST_ID) VALUES
@@ -131,8 +135,9 @@ INSERT INTO CHALLENGE_TESTS (CHALLENGE_ID, TEST_ID) VALUES
     (2, 2),
     (3, 3),
     (4, 4),
+    /*
     (5, 5),
-    (6, 6);
+    (6, 6)*/;
 
 INSERT INTO POST_STATE (state_name) VALUES ('Privado');
 INSERT INTO POST_STATE (state_name) VALUES ('Publico');
