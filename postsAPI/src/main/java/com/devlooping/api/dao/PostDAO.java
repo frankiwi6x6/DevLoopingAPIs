@@ -24,6 +24,11 @@ public class PostDAO {
 
     Long PRIVADO = 1L;
     Long PUBLICO = 2L;
+    Long DESHABILITADO = 3L;
+
+    String USER_API_URL = "http://localhost:8080/api/users/";
+
+    // Summaries
 
     public List<PostSummary> getAllPostSummaries() {
         return entityManager.createQuery("SELECT ps FROM PostSummary ps", PostSummary.class)
@@ -57,6 +62,7 @@ public class PostDAO {
         return postSummary;
     }
 
+    // Posts
     @Transactional
     public Post savePost(Post post) {
         post.setId(0L);
@@ -82,12 +88,46 @@ public class PostDAO {
     }
 
     @Transactional
-    public void deletePost(Long idPost) {
+    public void deletePost(Long idPost, Long idUser) {
+
+        
+
+        // Obtenemos el post
+        int ADMIN = 1;
+        int MODERADOR = 2;
         Post post = entityManager.find(Post.class, idPost);
         if (post == null) {
             throw new PostNotFoundException("Post not found with id: " + idPost);
         }
-        entityManager.remove(post);
+
+
+
+        
+        // Verificar si el usuario es administrador o moderador
+        List<?> isModerator = entityManager.createNativeQuery("SELECT * FROM USER WHERE id_user = :idUser AND user_type_id = :ADMIN OR user_type_id = :MODERADOR")
+                .setParameter("idUser", idUser)
+                .setParameter("ADMIN", ADMIN)
+                .setParameter("MODERADOR", MODERADOR)
+                .getResultList();
+        
+        
+        // Si el usuario es dueño del post, entonces se elimina el post
+        if (post.getUserId().equals(idUser)) {
+            entityManager.remove(post);
+        }
+
+        // Si el usuario no es dueño del post, entonces se lanza una excepción
+        if (!post.getUserId().equals(idUser)) {
+            // Si el usuario es administrador o moderador, entonces se desactiva el post
+        
+
+            if (!isModerator.isEmpty()) {
+                post.setPostStateId(DESHABILITADO);
+                entityManager.merge(post);
+            } else {
+                throw new ForbiddenException("User not allowed to delete this post");
+            } 
+        }
     }
 
     @Transactional
@@ -152,5 +192,30 @@ public class PostDAO {
         }
         return comment;
     }
+
+    @Transactional
+    public void likePost(Long idPost, Long idUser) {
+        // Verificar si el usuario ya le dio like al post
+        List<?> result = entityManager.createNativeQuery("SELECT * FROM USER_POST_LIKES WHERE USER_id_user = :idUser AND POST_id_post = :idPost")
+                .setParameter("idUser", idUser)
+                .setParameter("idPost", idPost)
+                .getResultList();
+        // Si ya le dio like, entonces se elimina el like
+        if (!result.isEmpty()) {
+            entityManager.createNativeQuery("DELETE FROM USER_POST_LIKES WHERE USER_id_user = :idUser AND POST_id_post = :idPost")
+                    .setParameter("idUser", idUser)
+                    .setParameter("idPost", idPost)
+                    .executeUpdate();
+        }
+        // Si no le ha dado like, entonces se agrega el like
+        if (result.isEmpty()) {
+            entityManager.createNativeQuery("INSERT INTO USER_POST_LIKES (USER_id_user, POST_id_post) VALUES (:idUser, :idPost)")
+                    .setParameter("idUser", idUser)
+                    .setParameter("idPost", idPost)
+                    .executeUpdate();
+        }
+    }
+
+    
 
 }

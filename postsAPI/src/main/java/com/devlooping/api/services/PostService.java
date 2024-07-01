@@ -1,4 +1,3 @@
-
 package com.devlooping.api.services;
 
 import java.io.IOException;
@@ -62,8 +61,8 @@ public class PostService {
         postDAO.updatePost(idPost, idUser, postContent);
     }
 
-    public void deletePost(Long idPost) {
-        postDAO.deletePost(idPost);
+    public void deletePost(Long idPost, Long idUser) {
+        postDAO.deletePost(idPost, idUser);
     }
 
     public void publishPost(Long idPost) {
@@ -100,5 +99,9 @@ public class PostService {
 
     public CommentSummary getCommentById(Long idComment) {
         return postDAO.getCommentById(idComment);
+    }
+
+    public void likePost(Long idPost, Long idUser) {
+        postDAO.likePost(idPost, idUser);
     }
 }

@@ -5,7 +5,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
 import com.devlooping.api.entity.Comment;
@@ -84,10 +92,14 @@ public class PostRestController {
         }
     }
 
-    @DeleteMapping("/posts/{idPost}")
-    public ResponseEntity<?> deletePost(@PathVariable Long idPost) {
+    @DeleteMapping("/posts/{userId}/{idPost}")
+    public ResponseEntity<?> deletePost(@PathVariable Long idPost, @PathVariable Long userId) {
+        
+        // Write a console Log 
+        System.out.println("Delete Post: " + idPost + " by User: " + userId);
+        
         try {
-            postService.deletePost(idPost);
+            postService.deletePost(idPost, userId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (PostNotFoundException e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Post Not Found", e.getMessage());
@@ -147,6 +159,15 @@ public class PostRestController {
         CommentSummary comment = postService.getCommentById(idComment);
         return new ResponseEntity<>(comment, HttpStatus.OK);
     }
+
+    // Likes and Dislikes
+
+    @PutMapping("/posts/{idPost}/like/{idUser}")
+    public ResponseEntity<?> likePost(@PathVariable Long idPost, @PathVariable Long idUser) {
+        postService.likePost(idPost, idUser);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
 
     @ExceptionHandler(PostNotFoundException.class)

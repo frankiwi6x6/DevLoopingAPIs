@@ -30,7 +30,9 @@ INSERT INTO DIFFICULTY (desc_difficulty) VALUES
 
 -- Insertar datos en la tabla USER
 INSERT INTO `USER` (username, email, password_hashed, created_at, user_type_id, status, bio) VALUES
-    ('admin', 'admin@example.com', 'YWRtaW4xMjM=', '2022-01-01', 1, 'active', null);
+    ('admin', 'admin@example.com', 'YWRtaW4xMjM=', '2022-01-01', 1, 'active', null),
+    ('pepe', 'pepe@example.com', 'YWRtaW4xMjM=', '2022-01-01', 3, 'active', null),
+    ('juanito', 'juanito@example.com', 'YWRtaW4xMjM=', '2022-01-01', 3, 'active', null);
 
 -- Insertar datos en la tabla CHALLENGE_TYPE
 INSERT INTO CHALLENGE_TYPE (desc_type) VALUES
@@ -141,3 +143,4 @@ INSERT INTO CHALLENGE_TESTS (CHALLENGE_ID, TEST_ID) VALUES
 
 INSERT INTO POST_STATE (state_name) VALUES ('Privado');
 INSERT INTO POST_STATE (state_name) VALUES ('Publico');
+INSERT INTO POST_STATE (state_name) VALUES ('Deshabilitado');
