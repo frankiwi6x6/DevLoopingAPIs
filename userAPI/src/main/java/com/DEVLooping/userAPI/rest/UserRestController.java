@@ -59,22 +59,28 @@ public class UserRestController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ErrorResponse(HttpStatus.UNAUTHORIZED.value(),
                             HttpStatus.UNAUTHORIZED.getReasonPhrase(),
-                            "Invalid email or password. Please try again.",
+                            "Correo electrónico o contraseña inválidos. Por favor, inténtalo de nuevo.",
                             1));
         } else if (theUser.getStatus().equals("inactive")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ErrorResponse(HttpStatus.UNAUTHORIZED.value(),
                             HttpStatus.UNAUTHORIZED.getReasonPhrase(),
-                            "User is inactive. Please contact the administrator.",
+                            "El usuario está desactivado. Por favor, contacta al administrador.",
                             2));
         } else if (theUser.getStatus().equals("banned")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ErrorResponse(HttpStatus.UNAUTHORIZED.value(),
                             HttpStatus.UNAUTHORIZED.getReasonPhrase(),
-                            "User is banned. Please contact the administrator.",
+                            "El usuario está baneado. Por favor, contacta al administrador.",
                             3));
-
+        } else if (theUser.getStatus().equals("pending")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ErrorResponse(HttpStatus.UNAUTHORIZED.value(),
+                            HttpStatus.UNAUTHORIZED.getReasonPhrase(),
+                            "El usuario aún no ha sido confirmado. Por favor, revisa tu correo electrónico para confirmar tu cuenta.",
+                            4));
         }
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(
                         theUser
@@ -106,6 +112,9 @@ public class UserRestController {
 
     String DOMINIO = "http://localhost:8080";
     String URL = DOMINIO + "/api/users/confirm/";
+
+    String FRONTEND_URL = "http://localhost:5173";
+    String URL_FRONTEND = FRONTEND_URL + "/password-recovery/";
 
     @PostMapping("/users/register")
     public ResponseEntity<?> addUser(@RequestBody User theUser) {
@@ -165,7 +174,7 @@ public class UserRestController {
 
             User dbUser = userService.save(theUser);
             emailService.sendEmail(theUser.getEmail(), "Bienvenido a DEVLooping", "Hello " + dbUser.getUsername()
-                    + ",\n\nBienvenido a DEVLooping! Estamos muy felices de que te hayas unido a nuestra plataforma. Comienza a compartir tu conocimiento con el mundo!.\n\nPara confirmar tu cuenta y comenzar a utilizar nuestra plataforma, por favor haz click en el siguiente enlace:"+ URL + dbUser.getId() + "\n\nSi no has creado una cuenta en DEVLooping, por favor ignora este mensaje.\n\nGracias por unirte a DEVLooping!\n\nA desarrollar,\nDEVLooping Team");
+                    + ",\n\nBienvenido a DEVLooping! Estamos muy felices de que te hayas unido a nuestra plataforma. Comienza a compartir tu conocimiento con el mundo!.\n\nPara confirmar tu cuenta y comenzar a utilizar nuestra plataforma, por favor haz click en el siguiente enlace:" + URL + dbUser.getId() + "\n\nSi no has creado una cuenta en DEVLooping, por favor ignora este mensaje.\n\nGracias por unirte a DEVLooping!\n\nA desarrollar,\nDEVLooping Team");
 
             return ResponseEntity.ok(dbUser);
         } catch (Exception e) {
@@ -242,6 +251,60 @@ public class UserRestController {
         // Guardar el usuario desactivado en la base de datos
         User updatedUser = userService.save(existingUser);
         return updatedUser;
+    }
+
+    @PostMapping("/users/request-email")
+    public ResponseEntity<?> recoveryPasswordMail(@RequestBody Map<String, String> request) {
+        // Rescatamos el correo electrónico del usuario
+        String email = request.get("email");
+        // Buscamos el usuario por correo electrónico
+        User user = userService.findByEmail(email);
+        // Si el usuario no existe, retornamos un error
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(),
+                            HttpStatus.NOT_FOUND.getReasonPhrase(),
+                            "User not found with email: " + email,
+                            1));
+
+        }
+        // Si el usuario existe, enviamos un correo con un enlace para recuperar la contraseña
+        try {
+            emailService.sendEmail(user.getEmail(), "Recuperación de contraseña", "Hola " + user.getUsername() + ",\n\nHemos recibido una solicitud para recuperar tu contraseña. Si no has solicitado este cambio, por favor ignora este mensaje.\n\nPara recuperar tu contraseña, haz click en el siguiente enlace: " + URL_FRONTEND + user.getId() + "\n\nGracias por utilizar DEVLooping!\n\nA desarrollar,\nDEVLooping Team");
+
+        } catch (Exception e) {
+            System.out.println("Error sending email: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                            HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                            "Error sending email. Please try again later.",
+                            2));
+        }
+        return ResponseEntity.ok("Correo enviado correctamente. Por favor revisa tu bandeja de entrada.");
+    }
+
+    @PutMapping("/users/recovery-password/{userId}")
+    public ResponseEntity<?> recoveryPassword(@PathVariable int userId, @RequestBody Map<String, String> request) {
+
+        // Rescatamos la nueva contraseña del usuario
+        String password = request.get("password");
+        // Buscamos el usuario por id
+        User user = userService.findById(userId);
+        // Si el usuario no existe, retornamos un error
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(),
+                            HttpStatus.NOT_FOUND.getReasonPhrase(),
+                            "User not found with id: " + userId,
+                            1));
+        }
+        // Encriptamos la nueva contraseña
+        String encryptedPassword = encryptService.encrypt(password);
+        // Actualizamos la contraseña del usuario
+        user.setPassword(encryptedPassword);
+        // Guardamos el usuario con la nueva contraseña
+        User updatedUser = userService.save(user);
+        return ResponseEntity.ok(updatedUser);
     }
 
     @RestControllerAdvice

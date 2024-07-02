@@ -1,12 +1,14 @@
 package com.DEVLooping.userAPI.dao;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.TypedQuery;
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.DEVLooping.userAPI.entity.User;
-import java.util.List;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
 
 @Repository
 public class UserDAOJpaImpl implements UserDAO {
@@ -56,7 +58,7 @@ public class UserDAOJpaImpl implements UserDAO {
     public User loginUser(String theEmail, String thePassword) {
         // Encriptar la contraseña antes de compararla con la base de datos
         TypedQuery<User> theQuery = entityManager
-                .createQuery("FROM User WHERE email=:email AND password=:password AND status='active'", User.class);
+                .createQuery("FROM User WHERE email=:email AND password=:password", User.class);
         theQuery.setParameter("email", theEmail);
         theQuery.setParameter("password", thePassword);
 
