@@ -9,6 +9,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "challenge_detail_view")
@@ -48,6 +54,9 @@ public class ChallengeSummary {
     @OneToMany
     @JoinColumn(name = "test_id")
     private List<Outputs> outputs;
+    @Column(name = "started_users")
+    private String startedUsers;
+
 
     public ChallengeSummary() {
     }
@@ -138,6 +147,23 @@ public class ChallengeSummary {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public List<Long> getStartedUsers() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Long> startedList = new ArrayList<>();
+        if (startedUsers != null && !startedUsers.trim().isEmpty()) {
+            try {
+                startedList = objectMapper.readValue(startedUsers, new TypeReference<List<Long>>() {});
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return startedList;
+    }
+
+    public void setStartedUsers(String startedUsers) {
+        this.startedUsers = startedUsers;
     }
 
     @Override

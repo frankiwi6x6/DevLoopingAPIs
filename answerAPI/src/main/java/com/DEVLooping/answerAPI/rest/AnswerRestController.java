@@ -79,15 +79,15 @@ public class AnswerRestController {
         return ResponseEntity.ok(theAnswers);
     }
 
-    @GetMapping("/answers/{answerId}/{userId}")
-    public ResponseEntity<?> getAnswerByUser(@PathVariable int answerId, @PathVariable int userId) {
-        Answer theAnswer = answerService.findByChallengeAndUserId(answerId, userId);
+    @GetMapping("/answers/{challengeId}/{userId}")
+    public ResponseEntity<?> getAnswerByUser(@PathVariable int challengeId, @PathVariable int userId) {
+        Answer theAnswer = answerService.findByChallengeAndUserId(challengeId, userId);
         if (theAnswer == null) {
             return ResponseEntity.status(
                     HttpStatus.NOT_FOUND).body(
                             new ErrorResponse(HttpStatus.NOT_FOUND.value(),
                                     HttpStatus.NOT_FOUND.getReasonPhrase(),
-                                    "El usuario "  + userId+ " no ha iniciado el reto con id: " + answerId));
+                                    "El usuario "  + userId+ " no ha iniciado el reto con id: " + challengeId));
         }
         return ResponseEntity.ok(theAnswer);
     }

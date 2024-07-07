@@ -7,7 +7,16 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.util.List;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Entity
 @Table(name = "post_summary_view")
@@ -17,7 +26,7 @@ public class PostSummary {
     @Column(name = "id_post")
     private Long postId;
 
-   @ManyToOne
+    @ManyToOne
     @JoinColumn(name = "id_post_state")
     private PostState postState;
 
@@ -37,8 +46,8 @@ public class PostSummary {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    @Column(name = "likes_count")
-    private Long likesCount;
+    @Column(name = "likes_users")
+    private String likesUsers;
 
     @Column(name = "shares_count")
     private Long sharesCount;
@@ -57,11 +66,10 @@ public class PostSummary {
         this.etiquetas = etiquetas;
     }
 
-
     public PostSummary() {
     }
 
-    public PostSummary(Long postId, PostState postState, User user, String postContent, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, Long likesCount, Long sharesCount, Long commentsCount, String etiquetas) {
+    public PostSummary(Long postId, PostState postState, User user, String postContent, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime deletedAt, String likesUsers, Long sharesCount, Long commentsCount, String etiquetas) {
         this.postId = postId;
         this.postState = postState;
         this.user = user;
@@ -69,12 +77,12 @@ public class PostSummary {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.deletedAt = deletedAt;
-        this.likesCount = likesCount;
+        this.likesUsers = likesUsers;
         this.sharesCount = sharesCount;
         this.commentsCount = commentsCount;
         this.etiquetas = etiquetas;
     }
-    
+
     public Long getPostId() {
         return postId;
     }
@@ -91,13 +99,18 @@ public class PostSummary {
         this.postContent = postContent;
     }
 
-
-    public Long getLikesCount() {
-        return likesCount;
-    }
-
-    public void setLikesCount(Long likesCount) {
-        this.likesCount = likesCount;
+    public List<Long> getLikesUsers() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<Long> likesList = new ArrayList<>();
+        if (likesUsers != null && !likesUsers.trim().isEmpty()) {
+            try {
+                likesList = objectMapper.readValue(likesUsers, new TypeReference<List<Long>>() {
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return likesList;
     }
 
     public Long getSharesCount() {
@@ -146,18 +159,6 @@ public class PostSummary {
 
     public void setPostState(PostState postState) {
         this.postState = postState;
-    }
-
-
-
-    public User getUser() {
-        return user;
-    }
-
-
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
 }

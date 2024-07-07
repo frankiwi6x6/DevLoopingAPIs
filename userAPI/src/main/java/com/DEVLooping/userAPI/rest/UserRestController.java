@@ -307,6 +307,40 @@ public class UserRestController {
         return ResponseEntity.ok(updatedUser);
     }
 
+    @PutMapping("/users/{userId}/ban")
+    public ResponseEntity<?> banUser(@PathVariable int userId) {
+        User existingUser = userService.findById(userId);
+        if (existingUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(),
+                            HttpStatus.NOT_FOUND.getReasonPhrase(),
+                            "User not found with id: " + userId,
+                            1));
+        }
+
+        existingUser.setStatus("banned");
+        existingUser.setDeactivated_at(new Date());
+        User savedUser = userService.save(existingUser);
+        return ResponseEntity.ok(savedUser);
+    }
+
+    @PutMapping("/users/{userId}/unban")
+    public ResponseEntity<?> unbanUser(@PathVariable int userId) {
+        User existingUser = userService.findById(userId);
+        if (existingUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(),
+                            HttpStatus.NOT_FOUND.getReasonPhrase(),
+                            "User not found with id: " + userId,
+                            1));
+        }
+
+        existingUser.setStatus("active");
+        existingUser.setDeactivated_at(null);
+        User savedUser = userService.save(existingUser);
+        return ResponseEntity.ok(savedUser);
+    }
+
     @RestControllerAdvice
     class UserRestControllerAdvice {
 

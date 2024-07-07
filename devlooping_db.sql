@@ -22,6 +22,7 @@ DROP TABLE IF EXISTS INPUT;
 DROP TABLE IF EXISTS OUTPUT;
 DROP TABLE IF EXISTS TEST;
 DROP TABLE IF EXISTS CHALLENGE;
+DROP TABLE IF EXISTS CHALLENGE_STATUS;
 DROP TABLE IF EXISTS USER;
 DROP TABLE IF EXISTS USER_TYPE;
 DROP TABLE IF EXISTS DIFFICULTY;
@@ -95,6 +96,13 @@ CREATE TABLE `USER` (
     CONSTRAINT USER_USER_TYPE_FK FOREIGN KEY (user_type_id) REFERENCES USER_TYPE(id_usertype) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+-- Definición de tabla CHALLENGE_STATUS (tabla independiente)
+CREATE TABLE CHALLENGE_STATUS (
+    id_status INTEGER PRIMARY KEY AUTO_INCREMENT,
+    status_name VARCHAR(255) NOT NULL,
+    status_desc VARCHAR(255) NOT NULL
+);
+
 -- Definición de tabla CHALLENGE 
 CREATE TABLE CHALLENGE ( 
     id_challenge INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -108,10 +116,12 @@ CREATE TABLE CHALLENGE (
     start_at DATE NOT NULL,
     end_at DATE,
     creator_id INTEGER,
+    status_id INTEGER NOT NULL,
     CONSTRAINT CHALLENGE_DIFFICULTY_FK FOREIGN KEY (DIFFICULTY_id_difficulty) REFERENCES DIFFICULTY(id_difficulty) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT CHALLENGE_CATEGORY_FK FOREIGN KEY (CATEGORY_ID) REFERENCES CHALLENGE_CATEGORY(id_category) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT CHALLENGE_C_TYPE_FK FOREIGN KEY (CHALLENGE_TYPE_id_type) REFERENCES CHALLENGE_TYPE(id_type) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT CHALLENGE_CREATEOR_FK FOREIGN KEY (creator_id) REFERENCES USER(ID_USER) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT CHALLENGE_CREATOR_FK FOREIGN KEY (creator_id) REFERENCES USER(ID_USER) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT CHALLENGE_STATUS_FK FOREIGN KEY (status_id) REFERENCES CHALLENGE_STATUS(id_status) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
@@ -185,7 +195,7 @@ CREATE TABLE CHALLENGE_USER (
     start_date datetime not null,
     end_date datetime null,
     tries int null,    
-    CONSTRAINT CHALLENGE_STATUS_FK FOREIGN KEY (ANSWER_STATUS_id) REFERENCES ANSWER_STATUS(STATUS_ID) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT ANSWER_STATUS_FK FOREIGN KEY (ANSWER_STATUS_id) REFERENCES ANSWER_STATUS(STATUS_ID) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT CHALLENGE_USER_USER_FK FOREIGN KEY (USER_id_user) REFERENCES `USER`(id_user) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT CHALLENGE_USER_CHALLENGE_FK FOREIGN KEY (CHALLENGE_id_challenge) REFERENCES CHALLENGE(id_challenge) ON DELETE CASCADE ON UPDATE CASCADE,
     UNIQUE KEY challenge_user_unique (USER_id_user, CHALLENGE_id_challenge)
@@ -246,7 +256,9 @@ SELECT p.id_post AS id_post,
            p.updated_at AS updated_at,
            p.deleted_at AS deleted_at, 
            p.etiquetas AS etiquetas,
-           (SELECT COUNT(post_id_post) FROM user_post_likes l WHERE l.post_id_post = p.id_post) AS likes_count, 
+           -- MOSTRAR TODOS LOS IDs de los usuarios que han dado like a la publicación
+              (SELECT JSON_ARRAYAGG(l.USER_id_user) FROM user_post_likes l WHERE l.post_id_post = p.id_post) AS likes_users,
+
            (SELECT COUNT(post_id_post) FROM comment c WHERE c.post_id_post = p.id_post) AS comments_count, 
            (SELECT COUNT(post_id_post) FROM user_post_shares s WHERE s.post_id_post= p.id_post) AS shares_count 
     FROM Post p 
@@ -277,6 +289,7 @@ SELECT
     c.DIFFICULTY_id_difficulty,
     c.CHALLENGE_TYPE_id_type,
     c.creator_id,
+    c.status_id,
     c.start_at,
     c.end_at,
     (
@@ -300,7 +313,13 @@ SELECT
         )
         FROM OUTPUT o
         WHERE o.TEST_ID = test_data.id_test
-    ) AS output_values
+    ) AS output_values,
+    -- ARREGLO DE LOS IDS DE TODOS LOS USUARIOS QUE INICIARON EL RETO
+    (
+        SELECT JSON_ARRAYAGG(cu.USER_id_user)
+        FROM CHALLENGE_USER cu
+        WHERE cu.CHALLENGE_id_challenge = c.id_challenge
+    ) AS started_users
 FROM
     CHALLENGE AS c
 LEFT JOIN
@@ -314,5 +333,6 @@ LEFT JOIN
         JOIN
             TEST t ON ct.TEST_ID = t.id_test
     ) AS test_data ON c.id_challenge = test_data.CHALLENGE_ID
+
 GROUP BY
     c.id_challenge, c.title, c.desc_challenge, c.content, c.CATEGORY_ID, c.DIFFICULTY_id_difficulty, c.CHALLENGE_TYPE_id_type, c.start_at, c.end_at, test_data.test_description, test_data.id_test;
