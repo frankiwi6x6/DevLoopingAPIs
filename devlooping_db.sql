@@ -207,6 +207,7 @@ CREATE TABLE POST_STATE(
 );
 
 
+
  -- Definición de tabla POST (depende de USER)
 CREATE TABLE POST (
     id_post INTEGER PRIMARY KEY AUTO_INCREMENT,
